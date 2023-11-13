@@ -34,15 +34,15 @@ export default function Form({ customers }) {
               <option value="" disabled>
                 Select a customer
               </option>
-              {customers.map((customer) => (
+              {/* {customers.map((customer) => (
                 <option key={customer.id} value={customer.id}>
                   {customer.name}
                 </option>
-              ))}
+              ))} */}
             </select>
             <AiFillRest className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
-          {state.errors?.customerId ? (
+          {/* {state.errors?.customerId ? (
             <div
               id="customer-error"
               aria-live="polite"
@@ -52,7 +52,7 @@ export default function Form({ customers }) {
                 <p key={error}>{error}</p>
               ))}
             </div>
-          ) : null}
+          ) : null} */}
         </div>
 
         {/* Invoice Amount */}
@@ -74,7 +74,7 @@ export default function Form({ customers }) {
               <AiFillMoneyCollect className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
-          {state.errors?.amount ? (
+          {/* {state.errors?.amount ? (
             <div
               id="amount-error"
               aria-live="polite"
@@ -84,7 +84,7 @@ export default function Form({ customers }) {
                 <p key={error}>{error}</p>
               ))}
             </div>
-          ) : null}
+          ) : null} */}
         </div>
 
         {/* Invoice Status */}
@@ -128,7 +128,7 @@ export default function Form({ customers }) {
               </div>
             </div>
           </div>
-          {state.errors?.status ? (
+          {/* {state.errors?.status ? (
             <div
               id="status-error"
               aria-live="polite"
@@ -138,9 +138,9 @@ export default function Form({ customers }) {
                 <p key={error}>{error}</p>
               ))}
             </div>
-          ) : null}
+          ) : null} */}
         </fieldset>
-        {state.message ? (
+        {/* {state.message ? (
           <div
             id="error-message"
             aria-live="polite"
@@ -148,7 +148,7 @@ export default function Form({ customers }) {
           >
             <p>{state.message}</p>
           </div>
-        ) : null}
+        ) : null} */}
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
