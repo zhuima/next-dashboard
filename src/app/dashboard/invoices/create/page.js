@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 17:11:29
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-13 18:00:21
+ * @LastEditTime: 2023-11-13 18:22:45
  * @FilePath: /my-next-dashboard/src/app/dashboard/invoices/create/page.js
  * @Description:
  *
@@ -28,7 +28,7 @@ export default async function Page() {
           },
         ]}
       />
-      <Form customers={customers} />
+      <Form />
     </main>
   );
 }
