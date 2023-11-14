@@ -119,6 +119,12 @@ const Navbar = ({ isMenuOpen }) => {
             { title: "Submenu 3-2", href: "/dashboard/menu3/sub2" },
           ]}
         />
+
+        <NavbarItem
+          title="值班信息"
+          href="/dashboard/dutyschedule"
+          onClick={() => handleMenuClick("值班信息")}
+        />
         {/* ...other menu items */}
       </div>
     </nav>
