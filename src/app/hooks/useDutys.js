@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-16 10:05:03
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-20 14:23:18
+ * @LastEditTime: 2023-11-20 18:41:39
  * @FilePath: /my-next-dashboard/src/app/hooks/useDutys.js
  * @Description:
  *
@@ -33,12 +33,18 @@ export function useDutys() {
     }
   }
 
+  async function updateDuty(id, duty) {
+    await axios.put(`/api/duty/${id}`, duty);
+    mutate();
+  }
+
   return {
     isLoading,
     dutys,
     error,
     total, // 返回总任务数
     createDuty,
+    updateDuty,
     mutate,
   };
 }
