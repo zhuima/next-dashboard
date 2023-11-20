@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-12 20:45:23
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-13 16:52:18
+ * @LastEditTime: 2023-11-20 11:57:14
  * @FilePath: /my-next-dashboard/src/app/layout.js
  * @Description:
  *
@@ -22,7 +22,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className}`}>{children}</body>
     </html>
   );
 }

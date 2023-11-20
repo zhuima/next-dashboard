@@ -101,7 +101,7 @@ const Navbar = ({ isMenuOpen }) => {
           <CMDBLogo />
         </Link>
       </div>
-      <div className="mt-10 flex flex-col">
+      <div className="mt-5 flex flex-col">
         <NavbarItem
           title="首页"
           href="/dashboard"
