@@ -4,7 +4,14 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
+import {
+  AiOutlineDown,
+  AiOutlineUp,
+  AiFillHome,
+  AiOutlineSchedule,
+  AiOutlineFieldTime,
+  AiOutlineTable,
+} from "react-icons/ai";
 
 import CMDBLogo from "@/app/ui/cmdb-logo";
 
@@ -15,10 +22,11 @@ const SubMenu = ({ items, isActive }) => {
         <Link
           href={item.href}
           key={index}
-          className={`block px-4 py-2 text-sm hover:bg-blue-700 ${
+          className={`flex items-center px-4 py-2 text-sm hover:bg-blue-700 ${
             isActive(item.href) ? "bg-blue-700 text-white" : "text-gray-200"
           }`}
         >
+          {item.Icon && <item.Icon className="mr-2" />} {/* Display icon */}
           {item.title}
         </Link>
       ))}
@@ -27,7 +35,7 @@ const SubMenu = ({ items, isActive }) => {
 };
 
 // Assuming NavbarItem is defined as follows
-const NavbarItem = ({ title, href, subItems, isOpen, onClick }) => {
+const NavbarItem = ({ title, href, subItems, isOpen, onClick, Icon }) => {
   const pathname = usePathname();
   const isActive = (path) => pathname === path;
 
@@ -42,10 +50,15 @@ const NavbarItem = ({ title, href, subItems, isOpen, onClick }) => {
     <div className="relative">
       <button
         onClick={onClick}
-        className={`flex items-center  justify-between w-full px-4 py-2 text-sm text-white font-semibold rounded hover:bg-blue-700 ${itemClass}`}
+        className={`flex items-center justify-between w-full px-4 py-2 text-sm text-white font-semibold rounded  hover:bg-blue-700  ${itemClass}`}
       >
-        {title}
-        <span>{isOpen ? <AiOutlineUp /> : <AiOutlineDown />}</span>
+        <div className="flex items-center">
+          {Icon && <Icon className="mr-2" />} {/* Icon for the navbar item */}
+          {title}
+        </div>
+        {subItems && subItems.length > 0 && (
+          <span>{isOpen ? <AiOutlineUp /> : <AiOutlineDown />}</span>
+        )}
       </button>
       {isOpen && <SubMenu items={subItems} isActive={isActive} />}
     </div>
@@ -53,9 +66,11 @@ const NavbarItem = ({ title, href, subItems, isOpen, onClick }) => {
     <Link
       href={href}
       onClick={onClick}
-      className={`block px-4 py-2 text-sm text-white font-semibold rounded hover:bg-blue-700 ${itemClass}`}
+      className={`flex items-center px-4 py-2 text-sm text-white font-semibold rounded  hover:bg-blue-700 ${itemClass}`}
     >
-      {title}
+      {Icon && <Icon className="mr-2 flex-shrink-0" />}{" "}
+      {/* Prevent icon from shrinking */}
+      <span className="flex-grow">{title}</span>{" "}
     </Link>
   );
 };
@@ -90,15 +105,25 @@ const Navbar = ({ isMenuOpen }) => {
         <NavbarItem
           title="首页"
           href="/dashboard"
+          Icon={AiFillHome}
           onClick={() => handleMenuClick("首页")}
         />
         <NavbarItem
           title="invoices"
           isOpen={openMenu === "invoices"}
           onClick={() => handleMenuClick("invoices")}
+          Icon={AiFillHome}
           subItems={[
-            { title: "Table", href: "/dashboard/invoices" },
-            { title: "Submenu 1-2", href: "/dashboard/invoices/sub2" },
+            {
+              title: "Table",
+              href: "/dashboard/invoices",
+              Icon: AiOutlineTable,
+            },
+            {
+              title: "Submenu 1-2",
+              href: "/dashboard/invoices/sub2",
+              Icon: AiFillHome,
+            },
           ]}
         />
         <NavbarItem
@@ -123,7 +148,14 @@ const Navbar = ({ isMenuOpen }) => {
         <NavbarItem
           title="值班信息"
           href="/dashboard/dutyschedule"
+          Icon={AiOutlineSchedule}
           onClick={() => handleMenuClick("值班信息")}
+        />
+        <NavbarItem
+          title="定时任务"
+          href="/dashboard/tasks"
+          Icon={AiOutlineFieldTime}
+          onClick={() => handleMenuClick("定时任务")}
         />
         {/* ...other menu items */}
       </div>

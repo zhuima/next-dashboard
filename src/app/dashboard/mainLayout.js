@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Content from "../components/Content";
 import Navbar from "../components/Navbar";
 import UserBar from "../components/UserBar";
-import Image from "next/image";
 
 export default function MainLayout({ children }) {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
@@ -18,6 +20,7 @@ export default function MainLayout({ children }) {
       <div className="flex flex-col flex-grow">
         <UserBar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
         <Content>
+          <ToastContainer />
           {/* Other components or content can go here */}
           {children}
         </Content>
