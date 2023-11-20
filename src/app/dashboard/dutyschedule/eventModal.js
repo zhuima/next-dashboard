@@ -9,11 +9,13 @@ export default function EventModal({
 }) {
   let eventNameInput;
   let eventUserInput;
+  let eventColorInput;
   const handleEventAdd = () => {
     const eventName = eventNameInput.value;
     const eventUser = eventUserInput.value;
+    const eventColor = eventColorInput.value;
     if (eventName) {
-      onAddEvent(selectedDate, eventName, eventUser);
+      onAddEvent(selectedDate, eventName, eventUser, eventColor);
       onClose();
     }
   };
@@ -84,6 +86,20 @@ export default function EventModal({
                   className="block w-full mt-1 border rounded-md shadow-sm focus:ring focus:ring-blue-200"
                   ref={(input) => (eventNameInput = input)}
                 />
+              </div>
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Event Color
+                </label>
+                <select
+                  className="block w-full mt-1 border rounded-md shadow-sm focus:ring focus:ring-blue-200"
+                  defaultValue=""
+                  ref={(select) => (eventColorInput = select)}
+                >
+                  <option value="red">red</option>
+                  <option value="blue">blue</option>
+                  <option value="green">green</option>
+                </select>
               </div>
               <div className="mt-4">
                 <button
