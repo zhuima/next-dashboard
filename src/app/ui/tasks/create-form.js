@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-15 18:47:10
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-17 13:54:24
+ * @LastEditTime: 2023-11-20 11:28:22
  * @FilePath: /my-next-dashboard/src/app/ui/tasks/create-form.js
  * @Description:
  *
@@ -107,7 +107,7 @@ export default function Form() {
             <select
               id="type"
               {...register("type")}
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
             >
               <option value="" disabled>
                 Select a type
