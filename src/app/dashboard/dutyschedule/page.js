@@ -23,8 +23,19 @@ export default function Page() {
 
   // 添加事件
   const handleDateSelect = (info) => {
-    setSelectedDate(info);
-    setIsModalAddOpen(true);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of the day for comparison
+
+    const selectedDate = new Date(info.startStr);
+
+    if (selectedDate < today) {
+      // If the selected date is before today, show an error and don't open the modal
+      toast.error("你不能选择今天之前的日期进行值班安排.");
+    } else {
+      // If the selected date is today or in the future, proceed to open the modal
+      setSelectedDate(info);
+      setIsModalAddOpen(true);
+    }
   };
 
   const handleModalAddClose = () => {
@@ -84,6 +95,7 @@ export default function Page() {
 
     handleModalEditClose();
   };
+
   // 点击事件显示详情
   const handleEventClick = (clickInfo) => {
     setSelectedEvent(clickInfo.event);

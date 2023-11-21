@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-20 17:59:31
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-21 11:32:13
+ * @LastEditTime: 2023-11-21 15:38:58
  * @FilePath: /my-next-dashboard/src/app/ui/dutyschedule/eventInfoModal.js
  * @Description:
  *
@@ -15,6 +15,12 @@ const EventInfoModal = ({ event, isOpen, onClose, onEdit }) => {
   if (!isOpen || !event) {
     return null;
   }
+
+  const eventStartDate = new Date(event.start);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Normalize today's date for comparison
+
+  const isPastEvent = eventStartDate < today;
 
   console.log("isopen", isOpen, event, onEdit);
   return (
@@ -86,13 +92,15 @@ const EventInfoModal = ({ event, isOpen, onClose, onEdit }) => {
                   >
                     Close
                   </button>
-                  <button
-                    className="middle none center mr-4 rounded-lg bg-green-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    data-ripple-dark="true"
-                    onClick={onEdit}
-                  >
-                    Edit
-                  </button>
+                  {!isPastEvent && (
+                    <button
+                      className="middle none center mr-4 rounded-lg bg-green-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                      data-ripple-dark="true"
+                      onClick={onEdit}
+                    >
+                      Edit
+                    </button>
+                  )}
                 </div>
               </div>
             </Transition.Child>
