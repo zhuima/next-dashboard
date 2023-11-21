@@ -7,14 +7,10 @@ import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 // import timeGridPlugin from "@fullcalendar/timegrid";
 import { toast } from "react-toastify";
-import { Fragment } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-// import "@fullcalendar/core/main.css";
-// import "@fullcalendar/daygrid/main.css";
-// import "@fullcalendar/timegrid/main.css";
-import EventAddModal from "./eventAddModal";
-import EventEditModal from "./eventEditModal";
-import EventInfoModal from "./eventInfoModal";
+import EventAddModal from "@/app/ui/dutyschedule/eventAddModal";
+import EventEditModal from "@/app/ui/dutyschedule/eventEditModal";
+import EventInfoModal from "@/app/ui/dutyschedule/eventInfoModal";
+
 export default function Page() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const { dutys, total, isLoading } = useDutys();

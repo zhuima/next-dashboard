@@ -2,15 +2,15 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-20 17:59:31
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-20 17:59:47
- * @FilePath: /my-next-dashboard/src/app/dashboard/dutyschedule/eventInfoModal.js
+ * @LastEditTime: 2023-11-21 11:09:08
+ * @FilePath: /my-next-dashboard/src/app/ui/dutyschedule/eventInfoModal.js
  * @Description:
  *
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
  */
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-// EventModal 组件可能看起来像这样
+
 const EventInfoModal = ({ event, isOpen, onClose, onEdit }) => {
   if (!isOpen || !event) {
     return null;
