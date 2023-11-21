@@ -1,5 +1,15 @@
 import { Fragment } from "react";
+import { useForm } from "react-hook-form";
 import { Dialog, Transition } from "@headlessui/react";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// 定义表单的验证架构
+const formSchema = z.object({
+  eventName: z.string().min(1, "事件名称是必填项"),
+  eventUser: z.string().min(1, "用户是必填项"),
+  eventColor: z.string().min(1, "颜色是必填项"),
+});
 
 export default function EventAddModal({
   isOpen,
@@ -7,15 +17,25 @@ export default function EventAddModal({
   onAddEvent,
   selectedDate,
 }) {
-  let eventNameInput;
-  let eventUserInput;
-  let eventColorInput;
-  const handleEventAdd = () => {
-    const eventName = eventNameInput.value;
-    const eventUser = eventUserInput.value;
-    const eventColor = eventColorInput.value;
-    if (eventName) {
-      onAddEvent(selectedDate, eventName, eventUser, eventColor);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: zodResolver(formSchema),
+  });
+
+  const handleEventAdd = (formData) => {
+    // Here formData will have the structure { eventName, eventUser, eventColor }
+    if (formData.eventName) {
+      onAddEvent(
+        selectedDate,
+        formData.eventName,
+        formData.eventUser,
+        formData.eventColor
+      );
+      reset();
       onClose();
     }
   };
@@ -56,27 +76,45 @@ export default function EventAddModal({
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+            <form
+              onSubmit={handleSubmit(handleEventAdd)}
+              className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+            >
               <Dialog.Title
                 as="h3"
                 className="text-lg font-medium leading-6 text-gray-900"
               >
                 添加值班人员
               </Dialog.Title>
+
+              {/* User Select */}
               <div className="mt-2">
                 <label className="block text-sm font-medium text-gray-700">
                   Select User
                 </label>
                 <select
                   className="block w-full mt-1 border rounded-md shadow-sm focus:ring focus:ring-blue-200"
-                  defaultValue=""
-                  ref={(select) => (eventUserInput = select)}
+                  {...register("eventUser")}
                 >
-                  <option value="zhuima">zhuima</option>
-                  <option value="tony">tony</option>
-                  <option value="nick">nick</option>
+                  <option value="" disabled>
+                    Select a user
+                  </option>
+                  <option key="zhuima" value="zhuima">
+                    zhuima
+                  </option>
+                  <option key="tony" value="tony">
+                    tony
+                  </option>
+                  <option key="nick" value="nick">
+                    nick
+                  </option>
                 </select>
+                {errors.eventUser && (
+                  <p className="text-red-500">{errors.eventUser.message}</p>
+                )}
               </div>
+
+              {/* Event Name Input */}
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700">
                   Event Name
@@ -84,32 +122,50 @@ export default function EventAddModal({
                 <input
                   type="text"
                   className="block w-full mt-1 border rounded-md shadow-sm focus:ring focus:ring-blue-200"
-                  ref={(input) => (eventNameInput = input)}
+                  placeholder="Enter Event Title"
+                  {...register("eventName")}
                 />
+                {errors.eventName && (
+                  <p className="text-red-500">{errors.eventName.message}</p>
+                )}
               </div>
+
+              {/* Event Color Select */}
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700">
                   Event Color
                 </label>
                 <select
                   className="block w-full mt-1 border rounded-md shadow-sm focus:ring focus:ring-blue-200"
-                  defaultValue=""
-                  ref={(select) => (eventColorInput = select)}
+                  {...register("eventColor")}
                 >
-                  <option value="red">red</option>
-                  <option value="blue">blue</option>
-                  <option value="green">green</option>
+                  <option value="" disabled>
+                    Select a color
+                  </option>
+                  <option key="red" value="red">
+                    red
+                  </option>
+                  <option key="blue" value="blue">
+                    blue
+                  </option>
+                  <option key="green" value="green">
+                    green
+                  </option>
                 </select>
+                {errors.eventColor && (
+                  <p className="text-red-500">{errors.eventColor.message}</p>
+                )}
               </div>
+
               <div className="mt-4">
                 <button
-                  onClick={handleEventAdd}
+                  type="submit"
                   className="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600"
                 >
                   提交
                 </button>
               </div>
-            </div>
+            </form>
           </Transition.Child>
         </div>
       </Dialog>

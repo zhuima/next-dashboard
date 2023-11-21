@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-20 17:59:31
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-21 11:09:08
+ * @LastEditTime: 2023-11-21 11:32:13
  * @FilePath: /my-next-dashboard/src/app/ui/dutyschedule/eventInfoModal.js
  * @Description:
  *
@@ -16,7 +16,7 @@ const EventInfoModal = ({ event, isOpen, onClose, onEdit }) => {
     return null;
   }
 
-  console.log("isopen", isOpen, event);
+  console.log("isopen", isOpen, event, onEdit);
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>

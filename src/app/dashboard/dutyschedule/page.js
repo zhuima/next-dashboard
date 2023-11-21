@@ -51,6 +51,7 @@ export default function Page() {
   };
 
   // 编辑事件
+
   const handleModalEditClose = () => {
     setIsModalEditOpen(false);
   };
@@ -74,7 +75,7 @@ export default function Page() {
 
     console.log("update data", data);
     try {
-      await updateDuty(id, data);
+      await updateDuty(Number(id), data);
       toast.success("Duty update successfully!");
     } catch (error) {
       toast.error("Failed to update duty");
