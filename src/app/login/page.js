@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 16:31:45
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-13 16:33:58
+ * @LastEditTime: 2023-11-22 13:38:43
  * @FilePath: /my-next-dashboard/src/app/login/page.js
  * @Description:
  *
@@ -13,6 +13,7 @@ import LoginForm from "@/app/ui/login-form";
 
 export const metadata = {
   title: "Login",
+  description: "自动化运维平台",
 };
 
 export default function LoginPage() {

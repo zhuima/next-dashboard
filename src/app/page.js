@@ -1,6 +1,20 @@
+/*
+ * @Author: zhuima zhuima314@gmail.com
+ * @Date: 2023-11-12 20:45:23
+ * @LastEditors: zhuima zhuima314@gmail.com
+ * @LastEditTime: 2023-11-22 13:37:04
+ * @FilePath: /my-next-dashboard/src/app/page.js
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved. 
+ */
 import Link from "next/link";
 import Image from "next/image";
 import CMDBLogo from "@/app/ui/cmdb-logo";
+
+
+
+
 
 export default function Page() {
   return (
