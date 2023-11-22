@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-12 20:48:52
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-21 15:07:26
+ * @LastEditTime: 2023-11-22 10:59:57
  * @FilePath: /my-next-dashboard/src/app/components/UserBar.js
  * @Description:
  *
@@ -106,7 +106,7 @@ const UserBar = ({ toggleSidebar, isSidebarOpen }) => {
               </Menu.Item>
             </div> */}
             <div className="px-1 py-1">
-              {/* <Menu.Item>
+              <Menu.Item>
                 {({ active }) => (
                   <button
                     className={`${
@@ -124,10 +124,14 @@ const UserBar = ({ toggleSidebar, isSidebarOpen }) => {
                         aria-hidden="true"
                       />
                     )}
-                    Archive
+                    <Link
+                      href="/dashboard/profile" // Replace with your logout logic
+                    >
+                      Profile
+                    </Link>
                   </button>
                 )}
-              </Menu.Item> */}
+              </Menu.Item>
               <Menu.Item>
                 {({ active }) => (
                   <button

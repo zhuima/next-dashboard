@@ -7,9 +7,11 @@ import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 // import timeGridPlugin from "@fullcalendar/timegrid";
 import { toast } from "react-toastify";
+import { AiFillHome } from "react-icons/ai";
 import EventAddModal from "@/app/ui/dutyschedule/eventAddModal";
 import EventEditModal from "@/app/ui/dutyschedule/eventEditModal";
 import EventInfoModal from "@/app/ui/dutyschedule/eventInfoModal";
+import Breadcrumbs from "@/app/ui/breadcrumbs";
 
 export default function Page() {
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -104,50 +106,58 @@ export default function Page() {
   let firstDaty = 1;
 
   return (
-    <div className="w-full  h-screen">
-      <div className="flex w-full items-center justify-between">
-        <h1 className={`text-2xl`}>值班表</h1>
-      </div>
+    <main>
+      <Breadcrumbs
+        breadcrumbs={[
+          { label: "首页", Icon: AiFillHome, href: "/dashboard" },
+          {
+            label: "值班表",
+            href: "/dashboard/dutyschedule",
+            active: true,
+          },
+        ]}
+      />
+      <div className="w-full  h-screen">
+        <div className="mt-4  md:mt-8">
+          <FullCalendar
+            defaultView="dayGridWeek"
+            firstDay={firstDaty}
+            locale="zh"
+            headerToolbar={{
+              left: "today prev next",
+              center: "title",
+              right: "dayGridMonth timeGridWeek timeGridDay",
+            }}
+            plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
+            themeSystem="Simplex"
+            editable
+            selectable
+            events={dutys}
+            select={handleDateSelect}
+            eventClick={handleEventClick}
+          />
+        </div>
+        <EventAddModal
+          isOpen={isModalAddOpen}
+          onClose={handleModalAddClose}
+          onAddEvent={handleEventAdd}
+          selectedDate={selectedDate}
+        />
 
-      <div className="mt-4  md:mt-8">
-        <FullCalendar
-          defaultView="dayGridWeek"
-          firstDay={firstDaty}
-          locale="zh"
-          headerToolbar={{
-            left: "today prev next",
-            center: "title",
-            right: "dayGridMonth timeGridWeek timeGridDay",
-          }}
-          plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
-          themeSystem="Simplex"
-          editable
-          selectable
-          events={dutys}
-          select={handleDateSelect}
-          eventClick={handleEventClick}
+        <EventEditModal
+          isOpen={isModalEditOpen}
+          onClose={handleModalEditClose}
+          onEditEvent={handleEventEdit}
+          eventData={selectedEvent}
+        />
+
+        <EventInfoModal
+          event={selectedEvent}
+          isOpen={isModalInfoOpen}
+          onClose={() => setIsModalInfoOpen(false)}
+          onEdit={() => setIsModalEditOpen(true)}
         />
       </div>
-      <EventAddModal
-        isOpen={isModalAddOpen}
-        onClose={handleModalAddClose}
-        onAddEvent={handleEventAdd}
-        selectedDate={selectedDate}
-      />
-
-      <EventEditModal
-        isOpen={isModalEditOpen}
-        onClose={handleModalEditClose}
-        onEditEvent={handleEventEdit}
-        eventData={selectedEvent}
-      />
-
-      <EventInfoModal
-        event={selectedEvent}
-        isOpen={isModalInfoOpen}
-        onClose={() => setIsModalInfoOpen(false)}
-        onEdit={() => setIsModalEditOpen(true)}
-      />
-    </div>
+    </main>
   );
 }
