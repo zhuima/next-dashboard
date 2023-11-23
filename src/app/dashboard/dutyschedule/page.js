@@ -6,6 +6,8 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 // import timeGridPlugin from "@fullcalendar/timegrid";
+import listPlugin from "@fullcalendar/list";
+
 import { toast } from "react-toastify";
 import { AiFillHome } from "react-icons/ai";
 import EventAddModal from "@/app/ui/dutyschedule/eventAddModal";
@@ -103,6 +105,66 @@ export default function Page() {
     setSelectedEvent(clickInfo.event);
     setIsModalInfoOpen(true); // 打开模态框
   };
+
+  // 拖拽
+  const handleEventDrop = async (dropInfo) => {
+    // If the selected date is today or in the future, proceed to open the modal
+    console.log("drop event---->", dropInfo.event);
+    const data = {
+      id: Number(dropInfo.event.id),
+      start: dropInfo.event.startStr,
+      end: dropInfo.event.endStr,
+      title: dropInfo.event.title,
+      user: dropInfo.event.user,
+      backgroundColor: dropInfo.event.backgroundColor,
+    };
+    console.log("drop event", data);
+    try {
+      await updateDuty(Number(dropInfo.event.id), data);
+      toast.success("Duty update successfully!");
+    } catch (error) {
+      toast.error("Failed to update duty");
+      console.error("Failed to update duty", error);
+    }
+  };
+
+  // 改变日程
+  const handleEventResize = async (resizeInfo) => {
+    // If the selected date is today or in the future, proceed to open the modal
+    console.log("resize event---->", resizeInfo.event);
+    const data = {
+      id: Number(resizeInfo.event.id),
+      start: resizeInfo.event.startStr,
+      end: resizeInfo.event.endStr,
+      title: resizeInfo.event.title,
+      user: resizeInfo.event.user,
+      backgroundColor: resizeInfo.event.backgroundColor,
+    };
+    console.log("resize event", data);
+    try {
+      await updateDuty(Number(resizeInfo.event.id), data);
+      toast.success("Duty update successfully!");
+    } catch (error) {
+      toast.error("Failed to update duty");
+      console.error("Failed to update duty", error);
+    }
+  };
+
+  // 事件允许
+  const handleEventAllow = (dropLocation, event) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // console.log("------------->", dropLocation);
+    // console.log("<------------->", event);
+    // 检查事件的新开始时间和结束时间
+    if (dropLocation.start < today || dropLocation.end < today) {
+      toast.error("你不能选择今天之前的日期进行值班安排.");
+      return false; // 阻止事件移动或调整大小
+    }
+    return true; // 允许事件移动或调整大小
+  };
+
   let firstDaty = 1;
 
   return (
@@ -122,16 +184,50 @@ export default function Page() {
           <FullCalendar
             defaultView="dayGridWeek"
             firstDay={firstDaty}
-            locale="zh"
-            headerToolbar={{
-              left: "today prev next",
-              center: "title",
-              right: "dayGridMonth timeGridWeek timeGridDay",
-            }}
-            plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
+            locale="zh-cn"
+            weekNumbers // 是否在日历中显示周次(一年中的第几周)
+            weekNumberTitle="周"
+            handleWindowResize //是否随浏览器窗口大小变化而自动变化
+            eventLimit //数据条数太多时，限制各自里显示的数据条数（多余的以“+2more”格式显示）
+            eventColor="#f3f4f6"
             themeSystem="Simplex"
+            headerToolbar={{
+              left: "today prev next myCustomButton",
+              center: "prevYear title nextYear",
+              right: "dayGridMonth timeGridWeek timeGridDay listMonth",
+            }}
+            buttonText={{
+              today: "今天",
+              month: "月",
+              week: "周",
+              day: "日",
+              prev: "上个月",
+              next: "下个月",
+              listMonth: "月度汇总",
+              prevYear: "上年",
+              nextYear: "下年",
+              // 可以为其他内置按钮添加更多翻译
+            }}
+            customButtons={{
+              myCustomButton: {
+                text: "导出数据",
+                click: () => {
+                  alert("clicked custom button 2!");
+                },
+              },
+            }}
+            plugins={[
+              dayGridPlugin,
+              interactionPlugin,
+              timeGridPlugin,
+              listPlugin,
+            ]}
+            slotEventOverlap={false}
             editable
             selectable
+            eventAllow={handleEventAllow}
+            eventDrop={handleEventDrop}
+            eventResize={handleEventResize}
             events={dutys}
             select={handleDateSelect}
             eventClick={handleEventClick}
