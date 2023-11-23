@@ -1,47 +1,44 @@
+/*
+ * @Author: zhuima zhuima314@gmail.com
+ * @Date: 2023-11-23 14:33:02
+ * @LastEditors: zhuima zhuima314@gmail.com
+ * @LastEditTime: 2023-11-23 18:36:21
+ * @FilePath: /my-next-dashboard/src/app/ui/dutyschedule/dutyInfo.js
+ * @Description:
+ *
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
+ */
 "use client";
 import { useState } from "react";
-import { useDutys } from "@/app/hooks/useDutys";
+import { useRef } from "react";
+import { toast } from "react-toastify";
+
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
-// import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment } from "react";
-import { useRef } from "react";
-import { forwardRef } from "react";
 
-import { toast } from "react-toastify";
-import { AiFillHome } from "react-icons/ai";
 import EventAddModal from "@/app/ui/dutyschedule/eventAddModal";
 import EventEditModal from "@/app/ui/dutyschedule/eventEditModal";
 import EventInfoModal from "@/app/ui/dutyschedule/eventInfoModal";
-import Breadcrumbs from "@/app/ui/breadcrumbs";
+import ExportDocument from "@/app/ui/dutyschedule/exportDocument";
+import DownloadModal from "@/app/ui/dutyschedule/downloadModal";
+import PreviewModal from "@/app/ui/dutyschedule/previewModal";
 
-import {
-  Page as InitPage,
-  Text,
-  View,
-  Font,
-  Document,
-  StyleSheet,
-  PDFDownloadLink,
-  PDFViewer,
-} from "@react-pdf/renderer";
+import { useDutys } from "@/app/hooks/useDutys";
 
 export default function DutyInfo() {
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const { dutys, total, isLoading } = useDutys();
-  const { createDuty, updateDuty } = useDutys(); // 使用 useDutys 钩子获取 createDuty 函数
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const [isModalAddOpen, setIsModalAddOpen] = useState(false);
   const [isModalEditOpen, setIsModalEditOpen] = useState(false);
   const [isModalInfoOpen, setIsModalInfoOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
 
+  const { dutys, total, isLoading, createDuty, updateDuty } = useDutys();
   // 添加事件
   const handleDateSelect = (info) => {
     const today = new Date();
@@ -126,7 +123,7 @@ export default function DutyInfo() {
   // 拖拽
   const handleEventDrop = async (dropInfo) => {
     // If the selected date is today or in the future, proceed to open the modal
-    console.log("drop event---->", dropInfo.event);
+    // console.log("drop event---->", dropInfo.event);
     const data = {
       id: Number(dropInfo.event.id),
       start: dropInfo.event.startStr,
@@ -148,7 +145,7 @@ export default function DutyInfo() {
   // 改变日程
   const handleEventResize = async (resizeInfo) => {
     // If the selected date is today or in the future, proceed to open the modal
-    console.log("resize event---->", resizeInfo.event);
+    // console.log("resize event---->", resizeInfo.event);
     const data = {
       id: Number(resizeInfo.event.id),
       start: resizeInfo.event.startStr,
@@ -204,136 +201,23 @@ export default function DutyInfo() {
 
   return (
     <>
-      {/* 弹出下载预览modal */}
-      <Transition appear show={showExportModal} as={Fragment}>
-        <Dialog
-          as="div"
-          className="fixed inset-0 z-10 overflow-y-auto"
-          onClose={() => setShowExportModal(!showExportModal)}
-        >
-          <div className="min-h-screen px-4 text-center">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-            </Transition.Child>
+      {/* 导出数据，对应下载和预览 */}
+      <DownloadModal
+        show={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        document={<ExportDocument dutys={dutys} />}
+        fileName={dynamicFileName}
+        downloadLinkRef={downloadLinkRef}
+        onDownloadClick={handleDownloadClick}
+        onPreviewClick={handlePreviewClick}
+      />
+      <PreviewModal
+        show={showPreview}
+        onClose={() => setShowPreview(false)}
+        document={<ExportDocument dutys={dutys} />}
+      />
 
-            {/* This element is to trick the browser into centering the modal contents. */}
-            <span
-              className="inline-block h-screen align-middle"
-              aria-hidden="true"
-            >
-              &#8203;
-            </span>
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
-            >
-              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-                <Dialog.Title
-                  as="h3"
-                  className="flex justify-between text-lg font-medium leading-6 text-gray-900  border-b mb-3"
-                >
-                  导出数据
-                </Dialog.Title>
-
-                <div className="mt-2">
-                  <p className="text-sm text-gray-500">
-                    您可以下载或预览值班表的PDF格式。
-                  </p>
-                </div>
-                <PDFDownloadLinkWrapper
-                  document={<MyDocument dutys={dutys} />}
-                  fileName={dynamicFileName}
-                  ref={downloadLinkRef}
-                />
-                <div className="mt-4 flex justify-between">
-                  <button
-                    type="button"
-                    className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                    onClick={handleDownloadClick}
-                  >
-                    下载
-                  </button>
-                  <button
-                    type="button"
-                    className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-green-500 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-green-500"
-                    onClick={handlePreviewClick}
-                  >
-                    预览
-                  </button>
-                </div>
-              </div>
-            </Transition.Child>
-          </div>
-        </Dialog>
-      </Transition>
-      {/* 预览 */}
-      <Transition appear show={showPreview} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-10"
-          onClose={() => setShowPreview(false)}
-        >
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-30" />
-          </Transition.Child>
-
-          {/* Center the modal contents */}
-          <div className="fixed inset-0 z-10 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <div className="inline-block w-full max-w-4xl overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-                  <Dialog.Title
-                    as="h3"
-                    className="flex justify-between text-lg font-medium leading-6 text-gray-900 p-4 border-b"
-                  >
-                    <p>PDF 预览</p>
-                    <button
-                      onClick={() => setShowPreview(false)}
-                      className="text-gray-500 hover:text-gray-800"
-                    >
-                      关闭
-                    </button>
-                  </Dialog.Title>
-                  <div className="p-4">
-                    <PDFViewer className="w-full" height={800}>
-                      <MyDocument dutys={dutys} />
-                    </PDFViewer>
-                  </div>
-                </div>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
+      {/* 日历表格 */}
       <div className="w-full  h-screen">
         <div className="mt-4  md:mt-8">
           <FullCalendar
@@ -389,6 +273,8 @@ export default function DutyInfo() {
             eventClick={handleEventClick}
           />
         </div>
+
+        {/* 增加modal */}
         <EventAddModal
           isOpen={isModalAddOpen}
           onClose={handleModalAddClose}
@@ -396,6 +282,7 @@ export default function DutyInfo() {
           selectedDate={selectedDate}
         />
 
+        {/* 编辑modal */}
         <EventEditModal
           isOpen={isModalEditOpen}
           onClose={handleModalEditClose}
@@ -403,6 +290,7 @@ export default function DutyInfo() {
           eventData={selectedEvent}
         />
 
+        {/* 事件详情modal */}
         <EventInfoModal
           event={selectedEvent}
           isOpen={isModalInfoOpen}
@@ -413,107 +301,3 @@ export default function DutyInfo() {
     </>
   );
 }
-
-const PDFDownloadLinkWrapper = forwardRef(({ document, fileName }, ref) => (
-  <PDFDownloadLink document={document} fileName={fileName}>
-    {({ blob, url, loading, error }) =>
-      loading ? (
-        <button disabled>Loading document...</button>
-      ) : (
-        <button ref={ref} style={{ display: "none" }}>
-          Download now!
-        </button>
-      )
-    }
-  </PDFDownloadLink>
-));
-
-PDFDownloadLinkWrapper.displayName = "PDFDownloadLinkWrapper";
-
-// 创建PDF文档组件
-const MyDocument = ({ dutys }) => {
-  const currentDate = new Date().toLocaleDateString();
-  Font.register({
-    family: "Microsoft Yahei",
-    src: "/font/msyh.ttf",
-  });
-
-  const styles = StyleSheet.create({
-    body: {
-      paddingTop: 35,
-      paddingBottom: 65,
-      paddingHorizontal: 35,
-    },
-
-    text: {
-      margin: 12,
-      fontSize: 54,
-      textAlign: "justify",
-      fontFamily: "Microsoft Yahei",
-    },
-
-    content: {
-      margin: 20,
-      fontSize: 24,
-      textAlign: "justify",
-      fontFamily: "Microsoft Yahei",
-    },
-  });
-
-  const Header = () => (
-    <Text
-      style={{
-        position: "absolute",
-        top: 30,
-        left: 30,
-        right: 30,
-        fontSize: 24,
-        fontFamily: "Microsoft Yahei",
-      }}
-    >
-      追马 CMDB 值班表
-    </Text>
-  );
-
-  const Footer = ({ pageNumber, totalPages }) => (
-    <View
-      fixed
-      style={{
-        position: "absolute",
-        bottom: 30,
-        left: 30,
-        right: 30,
-        fontSize: 24,
-        fontFamily: "Microsoft Yahei",
-      }}
-    >
-      <Text>
-        本PDF文档由程序自动生成 Page {pageNumber} of {totalPages}
-      </Text>
-    </View>
-  );
-
-  return (
-    <Document>
-      <InitPage size="A4" style={styles.body}>
-        <View style={styles.text}>
-          <Text>运维排班系统详情</Text>
-          <Text style={styles.content}>{currentDate}</Text>
-        </View>
-      </InitPage>
-
-      {dutys.map((item, index) => (
-        <InitPage key={index} style={styles.body}>
-          {/* ...页面内容... */}
-          <Header />
-          <View>
-            <Text style={styles.content}>
-              {item.id} {item.title}
-            </Text>
-          </View>
-          <Footer pageNumber={index + 1} totalPages={dutys.length} />
-        </InitPage>
-      ))}
-    </Document>
-  );
-};
