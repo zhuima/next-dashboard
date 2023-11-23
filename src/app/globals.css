@@ -41,13 +41,6 @@ body {
   justify-content: space-between;
 }
 
-/* 周末颜色 */
-.fc .fc-sun {
-  color: #337ab7;
-  border-color: black;
-  background-color: #ffa58c;
-}
-
 /* header tool bar color */
 
 .fc .fc-toolbar-title {
@@ -79,4 +72,38 @@ body {
 }
 .fc .fc-today-button:disabled {
   opacity: 1;
+} */
+
+/* // 各日のヘッダー背景色
+.fc-daygrid-day-top {
+  background-color: #337ab7;
+}
+// 本日のヘッダー背景色
+.fc-day-today .fc-daygrid-day-top {
+  background-color: #fddcab;
+}
+// 各日のイベント背景色
+.fc-daygrid-day-frame {
+  background-color: #337ab7;
+}
+// 曜日ヘッダーと各日の変な隙間を消す
+table.fc-scrollgrid-sync-table {
+  margin: 0 0 20px 0;
+}
+// 曜日ヘッダーの変な隙間を消す
+table.fc-col-header {
+  margin: 0;
+}
+// 土曜日のヘッダー背景色
+.fc .fc-day-sat {
+  background-color: #337ab7 !important;
+}
+// 日曜日のヘッダー背景色
+.fc .fc-day-sun {
+  background-color: #337ab7 !important;
+}
+// ツールバー内の日付を他の h2 より小さくしたかった
+.fc .fc-toolbar-title {
+  font-size: 1.5em;
+  padding: 5px 10px 0px;
 } */

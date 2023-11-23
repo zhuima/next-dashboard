@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-20 17:59:31
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-21 15:38:58
+ * @LastEditTime: 2023-11-23 13:40:20
  * @FilePath: /my-next-dashboard/src/app/ui/dutyschedule/eventInfoModal.js
  * @Description:
  *

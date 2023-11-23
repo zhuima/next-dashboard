@@ -2,19 +2,20 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-12 20:45:23
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-22 13:37:04
+ * @LastEditTime: 2023-11-23 14:39:52
  * @FilePath: /my-next-dashboard/src/app/page.js
- * @Description: 
- * 
- * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved. 
+ * @Description:
+ *
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
  */
 import Link from "next/link";
 import Image from "next/image";
 import CMDBLogo from "@/app/ui/cmdb-logo";
 
-
-
-
+export const metadata = {
+  title: "ZhuiMa CMDB 落地页",
+  description: "自动化运维平台落地页",
+};
 
 export default function Page() {
   return (
