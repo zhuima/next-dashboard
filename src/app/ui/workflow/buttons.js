@@ -2,8 +2,8 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 17:20:03
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-24 14:12:46
- * @FilePath: /my-next-dashboard/src/app/ui/tasks/buttons.js
+ * @LastEditTime: 2023-11-24 13:42:36
+ * @FilePath: /my-next-dashboard/src/app/ui/workflow/buttons.js
  * @Description:
  *
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
@@ -14,22 +14,22 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import { useTasks } from "@/app/hooks/useTasks"; // 更新为正确的路径
 
-export function CreateTask() {
+export function CreateWorkflow() {
   return (
     <Link
-      href="/dashboard/tasks/create"
+      href="/dashboard/workflow/create"
       className="flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
     >
-      <span className="hidden md:block">Create Task</span>{" "}
+      <span className="hidden md:block">Create Workflow</span>{" "}
       <AiOutlinePlus className="h-5 md:ml-4" />
     </Link>
   );
 }
 
-export function UpdateTask({ id }) {
+export function UpdateWorkflow({ id }) {
   return (
     <Link
-      href={`/dashboard/tasks/${id}/edit`}
+      href={`/dashboard/workflow/${id}/edit`}
       className="rounded-md border p-2 hover:bg-gray-100"
     >
       <AiFillEdit className="w-5" />
@@ -37,7 +37,7 @@ export function UpdateTask({ id }) {
   );
 }
 
-export function DeleteTask({ id }) {
+export function DeleteWorkflow({ id }) {
   const { deleteTask } = useTasks();
   const handleDelete = async (e) => {
     e.preventDefault(); // 阻止表单默认提交行为
@@ -60,12 +60,12 @@ export function DeleteTask({ id }) {
     //     // });
     //     try {
     //       deleteTask(id);
-    //       toast.success("Task deleted successfully!");
+    //       toast.success("Workflow deleted successfully!");
     //       // 可选: 显示删除成功的消息
     //     } catch (error) {
-    //       toast.error("Failed to delete task");
+    //       toast.error("Failed to delete Workflow");
     //       // 可选: 处理错误情况
-    //       console.error("Error deleting task", error);
+    //       console.error("Error deleting Workflow", error);
     //     }
     //   }
     // });
@@ -73,14 +73,14 @@ export function DeleteTask({ id }) {
     if (confirm("确定要删除么？")) {
       try {
         await deleteTask(id);
-        await toast.success("Task deleted successfully!", { autoClose: 2000 });
+        await toast.success("Workflow deleted successfully!");
 
         // 可选: 显示删除成功的消息
       } catch (error) {
-        await toast.error("Failed to delete task", { autoClose: 2000 });
+        await toast.error("Failed to delete Workflow");
 
         // 可选: 处理错误情况
-        console.error("Error deleting task", error);
+        console.error("Error deleting Workflow", error);
       }
     } else {
       console.log("Deletion cancelled");

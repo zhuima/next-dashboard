@@ -5,6 +5,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import {
+  AiOutlinePlus,
+  AiOutlineDelete,
+  AiFillEdit,
+  AiOutlineClose,
+} from "react-icons/ai";
 
 // 定义表单的验证架构
 const formSchema = z.object({
@@ -102,20 +108,28 @@ export default function EventEditModal({
               onSubmit={handleSubmit(onSubmit)}
               className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
             >
-              <Dialog.Title
-                as="h3"
-                className="text-lg font-medium leading-6 text-gray-900"
-              >
-                编辑值班人员
-              </Dialog.Title>
+              <div className="flex justify-between items-center mb-2">
+                <Dialog.Title
+                  as="h3"
+                  className="text-lg font-medium leading-6 text-gray-500"
+                >
+                  编辑值班人员
+                </Dialog.Title>
+                <div className="flex items-center space-x-2">
+                  <AiOutlineClose
+                    className="h-5 w-5 text-gray-500 cursor-pointer hover:text-gray-700"
+                    onClick={onClose}
+                  />
+                </div>
+              </div>
 
               {/* User Select */}
-              <div className="mt-2">
-                <label className="block text-sm font-medium text-gray-700">
+              <div className="border-t-4 border-orange-400 pt-2 mt-2">
+                <label className="block text-sm font-medium text-gray-700 leading-loose">
                   Select User
                 </label>
                 <select
-                  className="block w-full mt-1 border rounded-md shadow-sm focus:ring focus:ring-blue-200"
+                  className="h-full px-4 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-inset focus:ring-indigo-200 w-full sm:text-sm border-gray-300 "
                   {...register("eventUser")}
                 >
                   <option value="" disabled>
@@ -144,12 +158,12 @@ export default function EventEditModal({
 
               {/* Event Name Input */}
               <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 leading-loose">
                   Event Name
                 </label>
                 <input
                   type="text"
-                  className="block w-full mt-1 border rounded-md shadow-sm focus:ring focus:ring-blue-200"
+                  className="px-4 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-inset focus:ring-indigo-200 w-full sm:text-sm border-gray-300 "
                   placeholder="Enter Event Title"
                   {...register("eventName")}
                 />
@@ -166,11 +180,11 @@ export default function EventEditModal({
 
               {/* Event Color Select */}
               <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 leading-loose">
                   Event Color
                 </label>
                 <select
-                  className="block w-full mt-1 border rounded-md shadow-sm focus:ring focus:ring-blue-200"
+                  className="h-full px-4 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-inset focus:ring-indigo-200 w-full sm:text-sm border-gray-300 "
                   {...register("eventColor")}
                 >
                   <option value="" disabled>
@@ -200,7 +214,7 @@ export default function EventEditModal({
               <div className="mt-4">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600"
+                  className="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded-md"
                 >
                   提交
                 </button>

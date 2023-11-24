@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-23 14:33:02
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-23 18:36:21
+ * @LastEditTime: 2023-11-24 14:14:03
  * @FilePath: /my-next-dashboard/src/app/ui/dutyschedule/dutyInfo.js
  * @Description:
  *
@@ -48,7 +48,7 @@ export default function DutyInfo() {
 
     if (selectedDate < today) {
       // If the selected date is before today, show an error and don't open the modal
-      toast.error("你不能选择今天之前的日期进行值班安排.");
+      toast.error("你不能选择今天之前的日期进行值班安排.", { autoClose: 2000 });
     } else {
       // If the selected date is today or in the future, proceed to open the modal
       setSelectedDate(info);
@@ -70,9 +70,9 @@ export default function DutyInfo() {
     };
     try {
       await createDuty(data);
-      toast.success("Duty created successfully!");
+      toast.success("Duty created successfully!", { autoClose: 2000 });
     } catch (error) {
-      toast.error("Failed to create duty");
+      toast.error("Failed to create duty", { autoClose: 2000 });
       console.error("Failed to create duty", error);
     }
 
@@ -105,9 +105,9 @@ export default function DutyInfo() {
     console.log("update data", data);
     try {
       await updateDuty(Number(id), data);
-      toast.success("Duty update successfully!");
+      toast.success("Duty update successfully!", { autoClose: 2000 });
     } catch (error) {
-      toast.error("Failed to update duty");
+      toast.error("Failed to update duty", { autoClose: 2000 });
       console.error("Failed to update duty", error);
     }
 
@@ -135,9 +135,9 @@ export default function DutyInfo() {
     console.log("drop event", data);
     try {
       await updateDuty(Number(dropInfo.event.id), data);
-      toast.success("Duty update successfully!");
+      toast.success("Duty update successfully!", { autoClose: 2000 });
     } catch (error) {
-      toast.error("Failed to update duty");
+      toast.error("Failed to update duty", { autoClose: 2000 });
       console.error("Failed to update duty", error);
     }
   };
@@ -157,9 +157,9 @@ export default function DutyInfo() {
     console.log("resize event", data);
     try {
       await updateDuty(Number(resizeInfo.event.id), data);
-      toast.success("Duty update successfully!");
+      toast.success("Duty update successfully!", { autoClose: 2000 });
     } catch (error) {
-      toast.error("Failed to update duty");
+      toast.error("Failed to update duty", { autoClose: 2000 });
       console.error("Failed to update duty", error);
     }
   };
@@ -173,7 +173,7 @@ export default function DutyInfo() {
     // console.log("<------------->", event);
     // 检查事件的新开始时间和结束时间
     if (dropLocation.start < today || dropLocation.end < today) {
-      toast.error("你不能选择今天之前的日期进行值班安排.");
+      toast.error("你不能选择今天之前的日期进行值班安排.", { autoClose: 2000 });
       return false; // 阻止事件移动或调整大小
     }
     return true; // 允许事件移动或调整大小

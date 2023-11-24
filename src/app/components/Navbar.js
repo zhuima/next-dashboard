@@ -146,6 +146,13 @@ const Navbar = ({ isMenuOpen }) => {
         />
 
         <NavbarItem
+          title="工单待办"
+          href="/dashboard/workflow"
+          Icon={AiOutlineSchedule}
+          onClick={() => handleMenuClick("工单待办")}
+        />
+
+        <NavbarItem
           title="值班信息"
           href="/dashboard/dutyschedule"
           Icon={AiOutlineSchedule}

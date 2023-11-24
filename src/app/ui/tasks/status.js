@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 17:23:08
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-16 11:12:29
+ * @LastEditTime: 2023-11-24 13:54:07
  * @FilePath: /my-next-dashboard/src/app/ui/tasks/status.js
  * @Description:
  *
@@ -15,26 +15,15 @@ import clsx from "clsx";
 export default function TaskStatus({ status }) {
   return (
     <span
-      className={clsx(
-        "inline-flex items-center rounded-full px-2 py-1 text-xs",
-        {
-          "bg-gray-100 text-gray-500": status === "pending",
-          "bg-green-500 text-white": status === "paid",
-        }
-      )}
+      className={clsx({
+        "inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10":
+          status === "disable",
+        "inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20":
+          status === "active",
+      })}
     >
-      {status === "disable" ? (
-        <>
-          禁用
-          <AiFillClockCircle className="ml-1 w-4 text-gray-500" />
-        </>
-      ) : null}
-      {status === "active" ? (
-        <>
-          启用
-          <AiOutlineCheckCircle className="ml-1 w-4 text-white" />
-        </>
-      ) : null}
+      {status === "disable" ? <>禁用</> : null}
+      {status === "active" ? <>启用</> : null}
     </span>
   );
 }

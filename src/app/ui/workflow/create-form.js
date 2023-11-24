@@ -1,5 +1,14 @@
+/*
+ * @Author: zhuima zhuima314@gmail.com
+ * @Date: 2023-11-15 18:47:10
+ * @LastEditors: zhuima zhuima314@gmail.com
+ * @LastEditTime: 2023-11-24 13:45:53
+ * @FilePath: /my-next-dashboard/src/app/ui/workflow/create-form.js
+ * @Description:
+ *
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
+ */
 "use client";
-
 import {
   FcClock,
   FcViewDetails,
@@ -8,15 +17,15 @@ import {
   FcDisapprove,
   FcDocument,
 } from "react-icons/fc";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Button } from "@/app/ui/button";
-import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import Link from "next/link";
+import { Button } from "@/app/ui/button";
 import { useTasks } from "@/app/hooks/useTasks"; // 更新为正确的路径
 
 const FormSchema = z.object({
@@ -27,7 +36,7 @@ const FormSchema = z.object({
   status: z.enum(["active", "disable"], "Status is required"),
 });
 
-export default function EditInvoiceForm({ task }) {
+export default function Form() {
   const {
     register,
     handleSubmit,
@@ -35,32 +44,31 @@ export default function EditInvoiceForm({ task }) {
   } = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      spec: task?.spec,
-      type: task?.type,
-      command: task?.command,
-      status: task?.status,
-      description: task?.description,
+      spec: "",
+      type: "",
+      command: "",
+      description: "",
+      status: "active",
     },
   });
   const router = useRouter();
 
-  const { updateTask } = useTasks(); // 使用 useTasks 钩子获取 createTask 函数
+  const { createTask } = useTasks(); // 使用 useTasks 钩子获取 createTask 函数
 
   const onSubmit = async (data) => {
-    // console.log("------>", data);
+    console.log("------>", data);
     try {
-      await updateTask(task.id, data);
-      toast.success("Task update successfully!", { autoClose: 2000 });
+      await createTask(data);
+      toast.success("Task created successfully!");
       setTimeout(() => {
         router.push("/dashboard/tasks"); // 使用 Router.push 进行跳转
       }, 2000); // 在显示成功消息 2 秒后跳转
     } catch (error) {
-      toast.error("Failed to update task", { autoClose: 2000 });
-      console.error("Failed to update task", error);
+      toast.error("Failed to create task");
+      console.error("Failed to create task", error);
     }
   };
 
-  console.log("task 哇哈哈--->", task);
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -72,7 +80,6 @@ export default function EditInvoiceForm({ task }) {
             <input
               id="spec"
               {...register("spec")}
-              defaultValue={task?.spec}
               placeholder="Enter Cron spec"
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               aria-describedby="type-error"
@@ -90,6 +97,7 @@ export default function EditInvoiceForm({ task }) {
             </div>
           ) : null}
         </div>
+
         {/* Task Type */}
         <div className="mb-4">
           <label htmlFor="type" className="mb-2 block text-sm font-medium">
@@ -99,8 +107,7 @@ export default function EditInvoiceForm({ task }) {
             <select
               id="type"
               {...register("type")}
-              defaultValue={task?.type}
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
             >
               <option value="" disabled>
                 Select a type
@@ -125,6 +132,7 @@ export default function EditInvoiceForm({ task }) {
             </div>
           ) : null}
         </div>
+
         {/* Task Command */}
         <div className="mb-4">
           <label htmlFor="command" className="mb-2 block text-sm font-medium">
@@ -135,7 +143,6 @@ export default function EditInvoiceForm({ task }) {
               <input
                 id="command"
                 {...register("command")}
-                defaultValue={task?.command}
                 placeholder="Enter Cron command"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="command-error"
@@ -153,6 +160,7 @@ export default function EditInvoiceForm({ task }) {
             </div>
           ) : null}
         </div>
+
         {/* Task Description */}
         <div className="mb-4">
           <label
@@ -166,7 +174,6 @@ export default function EditInvoiceForm({ task }) {
               <textarea
                 id="description"
                 {...register("description")}
-                defaultValue={task?.description}
                 placeholder="Enter Cron description"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="description-error"
@@ -184,6 +191,7 @@ export default function EditInvoiceForm({ task }) {
             </div>
           ) : null}
         </div>
+
         {/* Task Status */}
         <fieldset>
           <legend className="mb-2 block text-sm font-medium">状态</legend>
@@ -195,7 +203,6 @@ export default function EditInvoiceForm({ task }) {
                   type="radio"
                   id="status-disable"
                   value="disable"
-                  defaultChecked={task?.status === "disable"}
                   className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600"
                   aria-describedby="status-error"
                 />
@@ -212,7 +219,6 @@ export default function EditInvoiceForm({ task }) {
                   type="radio"
                   id="status-active"
                   value="active"
-                  defaultChecked={task?.status === "active"}
                 />
                 <label
                   htmlFor="active"
@@ -234,9 +240,10 @@ export default function EditInvoiceForm({ task }) {
           ) : null}
         </fieldset>
       </div>
+
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/tasks"
+          href="/dashboard/workflow"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           取消

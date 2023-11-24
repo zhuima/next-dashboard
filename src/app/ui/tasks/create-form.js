@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-15 18:47:10
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-20 11:28:22
+ * @LastEditTime: 2023-11-24 14:13:15
  * @FilePath: /my-next-dashboard/src/app/ui/tasks/create-form.js
  * @Description:
  *
@@ -59,12 +59,12 @@ export default function Form() {
     console.log("------>", data);
     try {
       await createTask(data);
-      toast.success("Task created successfully!");
+      toast.success("Task created successfully!", { autoClose: 2000 });
       setTimeout(() => {
         router.push("/dashboard/tasks"); // 使用 Router.push 进行跳转
       }, 2000); // 在显示成功消息 2 秒后跳转
     } catch (error) {
-      toast.error("Failed to create task");
+      toast.error("Failed to create task", { autoClose: 2000 });
       console.error("Failed to create task", error);
     }
   };

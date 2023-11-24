@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 17:10:50
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-22 11:59:35
+ * @LastEditTime: 2023-11-24 12:00:00
  * @FilePath: /my-next-dashboard/src/app/dashboard/tasks/page.js
  * @Description:
  *
@@ -47,9 +47,6 @@ export default function Page() {
         ]}
       />
       <div className="w-full">
-        <div className="flex w-full items-center justify-between">
-          <h1 className={`text-2xl`}>Tasks</h1>
-        </div>
         <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
           <Search placeholder="Search tasks..." />
           <CreateTask />

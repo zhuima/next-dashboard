@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-20 17:59:31
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-23 13:40:20
+ * @LastEditTime: 2023-11-24 11:22:11
  * @FilePath: /my-next-dashboard/src/app/ui/dutyschedule/eventInfoModal.js
  * @Description:
  *
@@ -10,6 +10,13 @@
  */
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import {
+  AiOutlinePlus,
+  AiOutlineDelete,
+  AiFillEdit,
+  AiOutlineClose,
+} from "react-icons/ai";
+import { HiOutlinePencil } from "react-icons/hi";
 
 const EventInfoModal = ({ event, isOpen, onClose, onEdit }) => {
   if (!isOpen || !event) {
@@ -49,58 +56,57 @@ const EventInfoModal = ({ event, isOpen, onClose, onEdit }) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                <Dialog.Title
-                  as="h3"
-                  className="text-lg font-medium leading-6 text-gray-900"
-                >
-                  {event.title}
-                </Dialog.Title>
-                <div className="mt-2 border-t ">
-                  <p className="text-sm text-gray-500 pt-2">用户信息: 追马</p>
-                  <div className="flex text-sm text-gray-500 pt-2 ">
-                    联系电话: 135xxxxxxxx 一键onCall{" "}
-                    <span className="flex-no-shrink text-xs  font-medium tracking-wider  text-gray-400 hover:text-green-400 transition ease-in duration-300 ml-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                    </span>
+              <div className="w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 text-left align-middle shadow-xl transition-all">
+                {/* Title and Action Icons */}
+                <div className="flex justify-between items-center mb-2">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-semibold leading-6 text-gray-500"
+                  >
+                    {event.user}
+                  </Dialog.Title>
+                  <div className="flex items-center space-x-2">
+                    {/* Replace these with actual event handlers and icons */}
+                    <AiOutlinePlus
+                      className="h-5 w-5 text-gray-500 cursor-pointer hover:text-gray-700"
+                      onClick={() => {}}
+                    />
+                    {!isPastEvent && (
+                      <HiOutlinePencil
+                        className="h-5 w-5 text-gray-500 cursor-pointer hover:text-gray-700"
+                        onClick={onEdit}
+                      />
+                    )}
+                    <AiOutlineClose
+                      className="h-5 w-5 text-gray-500 cursor-pointer hover:text-gray-700"
+                      onClick={onClose}
+                    />
                   </div>
-
-                  <p className="text-sm text-gray-500 pt-2">
-                    开始时间: {event.start.toLocaleString()}
-                  </p>
-                  <p className="text-sm text-gray-500 pt-2">
-                    结束时间: {event.end.toLocaleString()}
-                  </p>
                 </div>
 
-                <div className="flex mt-4">
-                  <button
-                    className="middle none center mr-4 rounded-lg bg-blue-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    data-ripple-light="true"
-                    onClick={onClose}
-                  >
-                    Close
-                  </button>
-                  {!isPastEvent && (
-                    <button
-                      className="middle none center mr-4 rounded-lg bg-green-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                      data-ripple-dark="true"
-                      onClick={onEdit}
-                    >
-                      Edit
-                    </button>
-                  )}
+                {/* Content */}
+                <div className="border-t-4 border-orange-400 pt-2 mt-2 text-gray-900 text-sm font-normal">
+                  <div className="grid grid-cols-5 gap-3">
+                    <span className="text-gray-500">Start:</span>
+                    <span className="col-span-4">
+                      {event.start.toLocaleString()}
+                    </span>
+                    <span className="text-gray-500">End:</span>
+                    <span className="col-span-4">
+                      {event.end.toLocaleString()}
+                    </span>
+                    <span className="text-gray-500">Note:</span>
+                    <span className="col-span-4">{event.title}</span>
+                    <span className="text-gray-500">Role:</span>
+                    <span className="col-span-4">{event.role}</span>
+                    <span className="text-gray-500">User:</span>
+                    <span className="col-span-4">{event.user}</span>
+                    <span className="text-gray-500">E-Mail:</span>
+                    <span className="col-span-4">{event.email}</span>
+                    <span className="text-gray-500">Call:</span>
+                    <span className="col-span-4">{event.call}</span>
+                    {/* Repeat for each piece of content */}
+                  </div>
                 </div>
               </div>
             </Transition.Child>
