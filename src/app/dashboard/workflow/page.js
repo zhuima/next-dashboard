@@ -2,20 +2,34 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-24 11:53:08
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-24 13:45:05
+ * @LastEditTime: 2023-11-27 14:12:47
  * @FilePath: /my-next-dashboard/src/app/dashboard/workflow/page.js
  * @Description:
  *
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
  */
-import React from "react";
-import Breadcrumbs from "@/app/ui/breadcrumbs";
+
+"use client";
+import { useState, Suspense } from "react";
 import { AiFillHome } from "react-icons/ai";
+
+import Pagination from "@/app/ui/tasks/pagination";
 import Search from "@/app/ui/search";
+import { useProjects } from "@/app/hooks/useProjects";
+import { TasksTableSkeleton } from "@/app/ui/skeletons";
+import { usePathname, useSearchParams } from "next/navigation";
+import Breadcrumbs from "@/app/ui/breadcrumbs";
 import WorkflowTable from "@/app/ui/workflow/table";
 import { CreateWorkflow } from "@/app/ui/workflow/buttons";
 
 export default function Page() {
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get("page")) || 1;
+  const query = searchParams.get("query");
+  const [limit, setLimit] = useState(10);
+  const { projects, total, isLoading } = useProjects(page, limit, query);
+
+  console.log("log---->", projects);
   return (
     <main>
       <Breadcrumbs
@@ -34,7 +48,20 @@ export default function Page() {
           <Search placeholder="Search workflow..." />
           <CreateWorkflow />
         </div>
-        表单提交工作流
+        {isLoading ? (
+          <TasksTableSkeleton />
+        ) : (
+          <>
+            <WorkflowTable projects={projects} page={page} />
+            <div className="mt-5 flex w-full justify-center">
+              <Pagination
+                total={total}
+                currentPage={page}
+                itemsPerPage={limit}
+              />
+            </div>
+          </>
+        )}
       </div>
     </main>
   );

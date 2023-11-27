@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 17:20:03
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-24 14:12:46
+ * @LastEditTime: 2023-11-27 14:18:05
  * @FilePath: /my-next-dashboard/src/app/ui/tasks/buttons.js
  * @Description:
  *
@@ -26,10 +26,10 @@ export function CreateTask() {
   );
 }
 
-export function UpdateTask({ id }) {
+export function UpdateTask({ id, page }) {
   return (
     <Link
-      href={`/dashboard/tasks/${id}/edit`}
+      href={`/dashboard/tasks/${id}/edit?page=${page}`}
       className="rounded-md border p-2 hover:bg-gray-100"
     >
       <AiFillEdit className="w-5" />

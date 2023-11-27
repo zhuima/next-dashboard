@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 17:10:50
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-24 12:00:00
+ * @LastEditTime: 2023-11-27 14:07:59
  * @FilePath: /my-next-dashboard/src/app/dashboard/tasks/page.js
  * @Description:
  *
@@ -58,7 +58,7 @@ export default function Page() {
           <TasksTableSkeleton />
         ) : (
           <>
-            <TasksTable tasks={tasks} />{" "}
+            <TasksTable tasks={tasks} page={page} />
             <div className="mt-5 flex w-full justify-center">
               <Pagination
                 total={total}

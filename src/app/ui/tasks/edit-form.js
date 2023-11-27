@@ -11,7 +11,7 @@ import {
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/app/ui/button";
-import { useFormState } from "react-dom";
+import { usePathname, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useForm } from "react-hook-form";
@@ -46,13 +46,18 @@ export default function EditInvoiceForm({ task }) {
 
   const { updateTask } = useTasks(); // 使用 useTasks 钩子获取 createTask 函数
 
+  // get current page for keep go back page
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get("page")) || 1;
+  console.log("page is ---?>", page);
+
   const onSubmit = async (data) => {
     // console.log("------>", data);
     try {
       await updateTask(task.id, data);
       toast.success("Task update successfully!", { autoClose: 2000 });
       setTimeout(() => {
-        router.push("/dashboard/tasks"); // 使用 Router.push 进行跳转
+        router.push(`/dashboard/tasks?page=${page}`); // 使用 Router.push 进行跳转
       }, 2000); // 在显示成功消息 2 秒后跳转
     } catch (error) {
       toast.error("Failed to update task", { autoClose: 2000 });
@@ -72,7 +77,6 @@ export default function EditInvoiceForm({ task }) {
             <input
               id="spec"
               {...register("spec")}
-              defaultValue={task?.spec}
               placeholder="Enter Cron spec"
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               aria-describedby="type-error"
@@ -99,7 +103,6 @@ export default function EditInvoiceForm({ task }) {
             <select
               id="type"
               {...register("type")}
-              defaultValue={task?.type}
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
             >
               <option value="" disabled>
@@ -135,7 +138,6 @@ export default function EditInvoiceForm({ task }) {
               <input
                 id="command"
                 {...register("command")}
-                defaultValue={task?.command}
                 placeholder="Enter Cron command"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="command-error"
@@ -166,7 +168,6 @@ export default function EditInvoiceForm({ task }) {
               <textarea
                 id="description"
                 {...register("description")}
-                defaultValue={task?.description}
                 placeholder="Enter Cron description"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="description-error"
@@ -195,7 +196,6 @@ export default function EditInvoiceForm({ task }) {
                   type="radio"
                   id="status-disable"
                   value="disable"
-                  defaultChecked={task?.status === "disable"}
                   className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600"
                   aria-describedby="status-error"
                 />
@@ -212,7 +212,6 @@ export default function EditInvoiceForm({ task }) {
                   type="radio"
                   id="status-active"
                   value="active"
-                  defaultChecked={task?.status === "active"}
                 />
                 <label
                   htmlFor="active"
@@ -236,7 +235,7 @@ export default function EditInvoiceForm({ task }) {
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/tasks"
+          href={`/dashboard/tasks?page=${currentPage}`}
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           取消

@@ -2,8 +2,8 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-16 10:05:03
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-25 07:56:08
- * @FilePath: /my-next-dashboard/src/app/hooks/useTasks.js
+ * @LastEditTime: 2023-11-27 16:26:05
+ * @FilePath: /my-next-dashboard/src/app/hooks/useProjects.js
  * @Description:
  *
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
@@ -13,7 +13,7 @@ import axiosInstance from "@/app/lib/axiosInstance";
 
 import { fetcher } from "@/app/lib/fetcher";
 
-export function useTasks(page, limit, searchQuery) {
+export function useProjects(page, limit, searchQuery) {
   // 构建带有分页和搜索查询参数的URL
   const queryParams = new URLSearchParams({
     page: page,
@@ -26,63 +26,64 @@ export function useTasks(page, limit, searchQuery) {
     page !== undefined && limit !== undefined && searchQuery !== undefined;
 
   const { data, error, isLoading, mutate } = useSWR(
-    shouldFetch ? `/api/task?${queryParams}` : null,
+    shouldFetch ? `/api/project?${queryParams}` : null,
     fetcher
   );
 
-  const tasks = data?.tasks || [];
+  const projects = data?.projects || [];
   const total = data?.total || 1; // 假设API返回总任务数
 
   // ...保留其他方法
-  async function createTask(task) {
+  async function createProject(project) {
     try {
-      const response = await axiosInstance.post("/api/task", task);
+      const response = await axiosInstance.post("/api/project", project);
       mutate();
       return response.data; // 假设成功响应包含了任务数据
     } catch (error) {
-      console.error("Error in createTask:", error);
+      console.error("Error in createProject:", error);
       throw error; // 将错误向上抛出
     }
   }
 
-  async function updateTask(id, task) {
-    await axiosInstance.put(`/api/task/${id}`, task);
+  async function updateProject(id, project) {
+    await axiosInstance.put(`/api/project/${id}`, project);
     mutate();
   }
 
-  // 删除任务并更新缓存
-  const deleteTask = async (id) => {
-    await axiosInstance.delete(`/api/task/${id}`);
+  // 删除项目并更新缓存
+  const deleteProject = async (id) => {
+    await axiosInstance.delete(`/api/project/${id}`);
     mutate();
     // // 获取当前的任务列表
-    // const currentTasks = data?.tasks ? [...data.tasks] : [];
+    // const currentProjects = data?.projects ? [...data.projects] : [];
 
     // // 乐观更新（即先更新 UI）
+    // const newProject = currentProjects.filter((project) => project.id !== id);
     // mutate(
-    //   { ...data, tasks: tasks.filter((task) => task.id !== id) },
+    //   newProject,
     //   false // 不重新验证
     // );
 
     // try {
     //   // 执行删除操作
-    //   await axios.delete(`/api/task/${id}`);
-    //   console.log("delete id", `/api/task/${id}`);
-    //   mutate(`/api/task?${queryParams}`);
+    //   await axiosInstance.delete(`/api/project/${id}`);
+    //   console.log("delete id", `/api/project/${id}`);
+    //   // mutate(`/api/project?${queryParams}`);
     // } catch (error) {
-    //   console.error("Error in deleteTask:", error);
+    //   console.error("Error in deleteProject:", error);
     //   // 如果删除失败，则回滚更新
-    //   mutate({ ...data, tasks: currentTasks }, false);
+    //   mutate({ ...data, projects: currentProjects }, false);
     // }
   };
 
   return {
     isLoading,
-    tasks,
+    projects,
     error,
     total, // 返回总任务数
-    createTask,
-    updateTask,
-    deleteTask,
+    createProject,
+    updateProject,
+    deleteProject,
     mutate,
   };
 }

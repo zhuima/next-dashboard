@@ -2,18 +2,16 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-16 10:05:03
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-20 18:41:39
+ * @LastEditTime: 2023-11-25 07:57:18
  * @FilePath: /my-next-dashboard/src/app/hooks/useDutys.js
  * @Description:
  *
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
  */
 import useSWR from "swr";
-import axios from "axios";
+import axiosInstance from "@/app/lib/axiosInstance";
 
-axios.defaults.baseURL = process.env.NEXT_PUBLIC_APP_API_BASE_URL;
-
-const fetcher = (url) => axios.get(url).then((res) => res.data);
+import { fetcher } from "@/app/lib/fetcher";
 
 export function useDutys() {
   const { data, error, isLoading, mutate } = useSWR(`/api/duty`, fetcher);
@@ -24,7 +22,7 @@ export function useDutys() {
   // ...保留其他方法
   async function createDuty(duty) {
     try {
-      const response = await axios.post("/api/duty", duty);
+      const response = await axiosInstance.post("/api/duty", duty);
       mutate();
       return response.data; // 假设成功响应包含了任务数据
     } catch (error) {
@@ -34,7 +32,7 @@ export function useDutys() {
   }
 
   async function updateDuty(id, duty) {
-    await axios.put(`/api/duty/${id}`, duty);
+    await axiosInstance.put(`/api/duty/${id}`, duty);
     mutate();
   }
 

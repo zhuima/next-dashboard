@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 17:12:40
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-24 13:40:15
+ * @LastEditTime: 2023-11-27 11:06:45
  * @FilePath: /my-next-dashboard/src/app/dashboard/workflow/[id]/edit/page.js
  * @Description:
  *
@@ -11,6 +11,7 @@
 "use client";
 import { Suspense } from "react";
 import Form from "@/app/ui/workflow/edit-form";
+import { useProject } from "@/app/hooks/useProject";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import { AiFillHome } from "react-icons/ai";
 import { TasksTableSkeleton } from "@/app/ui/skeletons";
@@ -21,9 +22,9 @@ import { TasksTableSkeleton } from "@/app/ui/skeletons";
 export default function Page({ params }) {
   const id = params.id;
 
-  const { task, isLoading, error } = useTask(id);
+  const { project, isLoading, error } = useProject(id);
 
-  console.log("task data", task);
+  console.log("project data", project);
 
   return (
     <main>
@@ -43,7 +44,7 @@ export default function Page({ params }) {
         ]}
       />
       <Suspense fallback={<TasksTableSkeleton />}>
-        {isLoading ? <div>Loading...</div> : <Form task={task} />}
+        {isLoading ? <div>Loading...</div> : <Form project={project} />}
       </Suspense>
     </main>
   );

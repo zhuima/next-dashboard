@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-15 18:47:10
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-17 16:00:54
+ * @LastEditTime: 2023-11-27 14:08:14
  * @FilePath: /my-next-dashboard/src/app/ui/tasks/table.js
  * @Description:
  *
@@ -12,7 +12,7 @@ import Link from "next/link";
 import { UpdateTask, DeleteTask } from "@/app/ui/tasks/buttons";
 import TaskStatus from "@/app/ui/tasks/status";
 
-export default function TasksTable({ tasks }) {
+export default function TasksTable({ tasks, page }) {
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -38,7 +38,7 @@ export default function TasksTable({ tasks }) {
                     <p>{task.command}</p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateTask id={task.id} />
+                    <UpdateTask id={task.id} page={page} />
                     <DeleteTask id={task.id} />
                   </div>
                 </div>
@@ -101,7 +101,7 @@ export default function TasksTable({ tasks }) {
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateTask id={task.id} />
+                      <UpdateTask id={task.id} page={page} />
                       <DeleteTask id={task.id} />
                     </div>
                   </td>

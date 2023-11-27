@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 17:20:03
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-24 13:42:36
+ * @LastEditTime: 2023-11-27 16:12:48
  * @FilePath: /my-next-dashboard/src/app/ui/workflow/buttons.js
  * @Description:
  *
@@ -12,7 +12,7 @@ import { AiOutlinePlus, AiOutlineDelete, AiFillEdit } from "react-icons/ai";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import Link from "next/link";
-import { useTasks } from "@/app/hooks/useTasks"; // 更新为正确的路径
+import { useProjects } from "@/app/hooks/useProjects"; // 更新为正确的路径
 
 export function CreateWorkflow() {
   return (
@@ -26,10 +26,14 @@ export function CreateWorkflow() {
   );
 }
 
-export function UpdateWorkflow({ id }) {
+export function UpdateWorkflow({ id, page }) {
   return (
     <Link
-      href={`/dashboard/workflow/${id}/edit`}
+      href={{
+        pathname: `/dashboard/workflow/${id}/edit`,
+        query: { page: page },
+      }}
+      // as={`/dashboard/workflow/${id}/edit`}
       className="rounded-md border p-2 hover:bg-gray-100"
     >
       <AiFillEdit className="w-5" />
@@ -38,53 +42,53 @@ export function UpdateWorkflow({ id }) {
 }
 
 export function DeleteWorkflow({ id }) {
-  const { deleteTask } = useTasks();
-  const handleDelete = async (e) => {
+  const { deleteProject } = useProjects();
+  const handleDelete = (e) => {
     e.preventDefault(); // 阻止表单默认提交行为
 
-    // Swal.fire({
-    //   title: "危险操作，确认要删除么?",
-    //   text: "请注意，数据删除将永久消失",
-    //   icon: "warning",
-    //   showCancelButton: true,
-    //   confirmButtonColor: "#3085d6",
-    //   cancelButtonColor: "#d33",
-    //   confirmButtonText: "确认",
-    //   cancelButtonText: "取消",
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     // Swal.fire({
-    //     //   title: "Deleted!",
-    //     //   text: "Your file has been deleted.",
-    //     //   icon: "success",
-    //     // });
-    //     try {
-    //       deleteTask(id);
-    //       toast.success("Workflow deleted successfully!");
-    //       // 可选: 显示删除成功的消息
-    //     } catch (error) {
-    //       toast.error("Failed to delete Workflow");
-    //       // 可选: 处理错误情况
-    //       console.error("Error deleting Workflow", error);
-    //     }
-    //   }
-    // });
-
-    if (confirm("确定要删除么？")) {
-      try {
-        await deleteTask(id);
-        await toast.success("Workflow deleted successfully!");
-
-        // 可选: 显示删除成功的消息
-      } catch (error) {
-        await toast.error("Failed to delete Workflow");
-
-        // 可选: 处理错误情况
-        console.error("Error deleting Workflow", error);
+    Swal.fire({
+      title: "危险操作，确认要删除么?",
+      text: "请注意，数据删除将永久消失",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "确认",
+      cancelButtonText: "取消",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Swal.fire({
+        //   title: "Deleted!",
+        //   text: "Your file has been deleted.",
+        //   icon: "success",
+        // });
+        try {
+          deleteProject(id);
+          toast.success("Workflow deleted successfully!", { autoClose: 2000 });
+          // 可选: 显示删除成功的消息
+        } catch (error) {
+          toast.error("Failed to delete Workflow", { autoClose: 2000 });
+          // 可选: 处理错误情况
+          console.error("Error deleting Workflow", error);
+        }
       }
-    } else {
-      console.log("Deletion cancelled");
-    }
+    });
+
+    // if (confirm("确定要删除么？")) {
+    //   try {
+    //     await deleteProject(id);
+    //     toast.success("Workflow deleted successfully!", { autoClose: 2000 });
+
+    //     // 可选: 显示删除成功的消息
+    //   } catch (error) {
+    //     toast.error("Failed to delete Workflow", { autoClose: 2000 });
+
+    //     // 可选: 处理错误情况
+    //     console.error("Error deleting Workflow", error);
+    //   }
+    // } else {
+    //   console.log("Deletion cancelled");
+    // }
   };
 
   return (

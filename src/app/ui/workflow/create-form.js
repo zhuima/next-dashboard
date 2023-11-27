@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-15 18:47:10
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-24 13:45:53
+ * @LastEditTime: 2023-11-27 10:45:21
  * @FilePath: /my-next-dashboard/src/app/ui/workflow/create-form.js
  * @Description:
  *
@@ -20,19 +20,23 @@ import {
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+import { useProjects } from "@/app/hooks/useProjects";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Link from "next/link";
 import { Button } from "@/app/ui/button";
-import { useTasks } from "@/app/hooks/useTasks"; // 更新为正确的路径
 
 const FormSchema = z.object({
-  spec: z.string().min(1, "Spec is required"),
-  type: z.string().min(1, "Type is required"),
-  command: z.string().min(1, "Command is required"),
+  project_name: z.string().min(1, "Spec is required"),
+  git_repo: z.string().min(1, "git_repo is required"),
+  // https://www.reddit.com/r/reactjs/comments/15hup78/how_to_use_shadcn_reacthookform_zod_for_input/ 解决Expected number, received string 报错
+  is_proxy: z.string().transform((v) => Number(v) || 0),
+  language: z.string(),
+  port: z.number(),
   description: z.string(),
+  owner: z.string(),
   status: z.enum(["active", "disable"], "Status is required"),
 });
 
@@ -44,28 +48,35 @@ export default function Form() {
   } = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      spec: "",
-      type: "",
-      command: "",
+      project_name: "",
+      git_repo: "",
+      is_proxy: 0,
+      language: "",
+      port: 8080,
       description: "",
+      owner: "",
       status: "active",
     },
   });
   const router = useRouter();
-
-  const { createTask } = useTasks(); // 使用 useTasks 钩子获取 createTask 函数
+  const { createProject } = useProjects(); // 使用 useProjects 钩子获取 createProject 函数
 
   const onSubmit = async (data) => {
     console.log("------>", data);
+    // const transformedData = {
+    //   ...data,
+    //   is_proxy: Number(data.is_proxy),
+    // };
+
     try {
-      await createTask(data);
-      toast.success("Task created successfully!");
+      await createProject(data);
+      toast.success("Project created successfully!");
       setTimeout(() => {
-        router.push("/dashboard/tasks"); // 使用 Router.push 进行跳转
+        router.push("/dashboard/workflow"); // 使用 Router.push 进行跳转
       }, 2000); // 在显示成功消息 2 秒后跳转
     } catch (error) {
-      toast.error("Failed to create task");
-      console.error("Failed to create task", error);
+      toast.error("Failed to create project");
+      console.error("Failed to create project", error);
     }
   };
 
@@ -73,101 +84,241 @@ export default function Form() {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         <div className="mb-4">
-          <label htmlFor="spec" className="mb-2 block text-sm font-medium">
-            定时任务
+          <label
+            htmlFor="project_name"
+            className="mb-2 block text-sm font-medium"
+          >
+            项目名称
           </label>
           <div className="relative">
             <input
-              id="spec"
-              {...register("spec")}
-              placeholder="Enter Cron spec"
+              id="project_name"
+              {...register("project_name")}
+              placeholder="Enter Project Name"
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               aria-describedby="type-error"
             />
             <FcClock className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
 
-          {errors?.spec?.message ? (
+          {errors?.project_name?.message ? (
             <div
               id="customer-error"
               aria-live="polite"
               className="mt-2 text-sm text-red-500"
             >
-              {errors.spec.message}
+              {errors.project_name.message}
             </div>
           ) : null}
         </div>
 
-        {/* Task Type */}
         <div className="mb-4">
-          <label htmlFor="type" className="mb-2 block text-sm font-medium">
-            任务类型
+          <label htmlFor="git_repo" className="mb-2 block text-sm font-medium">
+            代码仓库地址
           </label>
           <div className="relative">
-            <select
-              id="type"
-              {...register("type")}
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-            >
-              <option value="" disabled>
-                Select a type
-              </option>
-              <option key="system_command" value="system_command">
-                System Command
-              </option>
-              <option key="custom_method" value="custom_method">
-                Custom Method
-              </option>
-            </select>
-            <FcViewDetails className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            <input
+              id="git_repo"
+              {...register("git_repo")}
+              placeholder="Enter Git Repo Address"
+              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              aria-describedby="type-error"
+            />
+            <FcClock className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
 
-          {errors?.type?.message ? (
+          {errors?.git_repo?.message ? (
             <div
               id="customer-error"
               aria-live="polite"
               className="mt-2 text-sm text-red-500"
             >
-              {errors.type.message}
+              {errors.git_repo.message}
             </div>
           ) : null}
         </div>
 
-        {/* Task Command */}
-        <div className="mb-4">
-          <label htmlFor="command" className="mb-2 block text-sm font-medium">
-            任务内容
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="command"
-                {...register("command")}
-                placeholder="Enter Cron command"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="command-error"
-              />
-              <FcCommandLine className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+        <div className="-mx-3 flex flex-wrap ">
+          {/* Task Type */}
+          <div className="w-full px-3 sm:w-1/2 ">
+            <div className="mb-4">
+              <label
+                htmlFor="language"
+                className="mb-2 block text-sm font-medium"
+              >
+                项目语言类型
+              </label>
+              <div className="relative">
+                <select
+                  id="language"
+                  {...register("language")}
+                  className="w-full rounded-md border border-[#e0e0e0] bg-white py-2 px-6 pl-10 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                >
+                  <option value="" disabled>
+                    Select Project Language
+                  </option>
+                  <option key="vue" value="vue">
+                    vue
+                  </option>
+                  <option key="java" value="java">
+                    java
+                  </option>
+                  <option key="go" value="go">
+                    go
+                  </option>
+                  <option key="python" value="python">
+                    python
+                  </option>
+                  <option key="rust" value="rust">
+                    rust
+                  </option>
+                </select>
+                <FcViewDetails className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              </div>
+
+              {errors?.language?.message ? (
+                <div
+                  id="customer-error"
+                  aria-live="polite"
+                  className="mt-2 text-sm text-red-500"
+                >
+                  {errors.language.message}
+                </div>
+              ) : null}
             </div>
           </div>
-          {errors?.command?.message ? (
-            <div
-              id="customer-error"
-              aria-live="polite"
-              className="mt-2 text-sm text-red-500"
-            >
-              {errors.command.message}
-            </div>
-          ) : null}
+
+          <div className="w-full px-3 sm:w-1/2">
+            {/* Task is_proxy */}
+            <fieldset className="mb-4">
+              <legend className="mb-2 block text-sm font-medium">
+                是否需要域名
+              </legend>
+              <div className="w-full rounded-md border border-[#e0e0e0] bg-white py-2 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
+                <div className="flex gap-4">
+                  <div className="flex items-center">
+                    <input
+                      {...register("is_proxy")}
+                      type="radio"
+                      id="proxy_disable"
+                      value="0" // 0 代表 disable
+                      aria-describedby="is_proxy-error"
+                    />
+                    <label
+                      htmlFor="proxy_disable"
+                      className="ml-2 flex items-center"
+                    >
+                      否
+                    </label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      {...register("is_proxy")}
+                      type="radio"
+                      id="proxy_active"
+                      value="1" // 1 代表 active
+                    />
+                    <label
+                      htmlFor="proxy_active"
+                      className="ml-2 flex items-center "
+                    >
+                      是
+                    </label>
+                  </div>
+                </div>
+              </div>
+              {errors?.is_proxy?.message ? (
+                <div
+                  id="is_proxy-error"
+                  aria-live="polite"
+                  className="mt-2 text-sm text-red-500"
+                >
+                  {errors.is_proxy.message}
+                </div>
+              ) : null}
+            </fieldset>
+          </div>
         </div>
 
+        <div className="-mx-3 flex flex-wrap ">
+          <div className="w-full px-3 sm:w-1/2">
+            <div className="mb-4">
+              <label htmlFor="port" className="mb-2 block text-sm font-medium">
+                项目端口
+              </label>
+              <div className="relative">
+                <input
+                  id="port"
+                  type="number"
+                  {...register("port", {
+                    setValueAs: (value) =>
+                      value === "" ? null : parseInt(value, 10),
+                  })}
+                  className="w-full rounded-md border border-[#e0e0e0] bg-white pl-10 py-2 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                  aria-describedby="type-error"
+                />
+                <FcClock className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+              </div>
+
+              {errors?.port?.message ? (
+                <div
+                  id="customer-error"
+                  aria-live="polite"
+                  className="mt-2 text-sm text-red-500"
+                >
+                  {errors.port.message}
+                </div>
+              ) : null}
+            </div>
+          </div>
+
+          {/* Project Owner */}
+          <div className="w-full px-3 sm:w-1/2">
+            <div className="mb-4">
+              <label htmlFor="owner" className="mb-2 block text-sm font-medium">
+                项目负责人
+              </label>
+              <div className="relative">
+                <select
+                  id="owner"
+                  {...register("owner")}
+                  className="w-full rounded-md border border-[#e0e0e0] bg-white pl-10 py-2 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                >
+                  <option value="" disabled>
+                    Select Project owner
+                  </option>
+                  <option key="zhuima" value="zhuima">
+                    zhuima
+                  </option>
+                  <option key="Nick" value="Nick">
+                    Nick
+                  </option>
+                  <option key="Tony" value="Tony">
+                    Tony
+                  </option>
+                </select>
+                <FcViewDetails className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              </div>
+
+              {errors?.owner?.message ? (
+                <div
+                  id="customer-error"
+                  aria-live="polite"
+                  className="mt-2 text-sm text-red-500"
+                >
+                  {errors.owner.message}
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
         {/* Task Description */}
-        <div className="mb-4">
+        <div className="mt-4 mb-4">
           <label
             htmlFor="description"
             className="mb-2 block text-sm font-medium"
           >
-            任务描述
+            项目描述
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
