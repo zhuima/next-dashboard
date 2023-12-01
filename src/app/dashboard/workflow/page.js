@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-24 11:53:08
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-27 14:12:47
+ * @LastEditTime: 2023-12-01 09:58:02
  * @FilePath: /my-next-dashboard/src/app/dashboard/workflow/page.js
  * @Description:
  *
@@ -27,9 +27,19 @@ export default function Page() {
   const page = Number(searchParams.get("page")) || 1;
   const query = searchParams.get("query");
   const [limit, setLimit] = useState(10);
-  const { projects, total, isLoading } = useProjects(page, limit, query);
+  // console.log("log----> first", page);
+  const queryParams = new URLSearchParams({
+    page: page,
+    size: limit,
+    query: query ?? "", // 假设API支持`q`作为搜索参数
+  }).toString();
 
-  console.log("log---->", projects);
+  const url = queryParams ? `/api/project?${queryParams}` : "/api/project";
+  // console.log("Query Params:", queryParams);
+
+  const { projects, total, isLoading, mutate } = useProjects(url);
+
+  console.log("log----> after", page, projects);
   return (
     <main>
       <Breadcrumbs
@@ -52,7 +62,12 @@ export default function Page() {
           <TasksTableSkeleton />
         ) : (
           <>
-            <WorkflowTable projects={projects} page={page} />
+            <WorkflowTable
+              projects={projects}
+              page={page}
+              url={url}
+              mutate={mutate}
+            />
             <div className="mt-5 flex w-full justify-center">
               <Pagination
                 total={total}

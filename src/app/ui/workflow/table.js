@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-15 18:47:10
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-27 14:13:37
+ * @LastEditTime: 2023-12-01 10:30:14
  * @FilePath: /my-next-dashboard/src/app/ui/workflow/table.js
  * @Description:
  *
@@ -12,7 +12,7 @@ import Link from "next/link";
 import { UpdateWorkflow, DeleteWorkflow } from "@/app/ui/workflow/buttons";
 import WorkflowStatus from "@/app/ui/workflow/status";
 
-export default function WorkflowTable({ projects, page }) {
+export default function WorkflowTable({ projects, page, mutate }) {
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -100,7 +100,7 @@ export default function WorkflowTable({ projects, page }) {
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateWorkflow id={project.id} page={page} />
-                      <DeleteWorkflow id={project.id} />
+                      <DeleteWorkflow id={project.id} mutate={mutate} />
                     </div>
                   </td>
                 </tr>

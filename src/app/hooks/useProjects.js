@@ -2,31 +2,48 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-16 10:05:03
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-27 16:26:05
+ * @LastEditTime: 2023-12-01 09:56:52
  * @FilePath: /my-next-dashboard/src/app/hooks/useProjects.js
  * @Description:
  *
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
  */
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import axiosInstance from "@/app/lib/axiosInstance";
-
+import { toast } from "react-toastify";
 import { fetcher } from "@/app/lib/fetcher";
 
-export function useProjects(page, limit, searchQuery) {
-  // 构建带有分页和搜索查询参数的URL
-  const queryParams = new URLSearchParams({
-    page: page,
-    size: limit,
-    query: searchQuery, // 假设API支持`q`作为搜索参数
-  }).toString();
+// export function useProjects(page, limit, searchQuery) {
+export function useProjects(url) {
+  // 定义默认参数
+  // console.log("request url -----+++++++++++++++++++++++++++", url);
 
-  // 当page, limit或searchQuery为undefined时，不发送请求
-  const shouldFetch =
-    page !== undefined && limit !== undefined && searchQuery !== undefined;
+  // // 构建带有分页和搜索查询参数的URL
+  // const queryParams = new URLSearchParams({
+  //   page: page,
+  //   size: limit,
+  //   query: searchQuery ?? "", // 假设API支持`q`作为搜索参数
+  // }).toString();
+  // console.log("log----> after for hook", page, limit);
+
+  // // 当page, limit或searchQuery为undefined时，不发送请求
+  // const shouldFetch =
+  //   page !== undefined && limit !== undefined && searchQuery !== undefined;
+
+  // // 检查是否应该发送请求
+  // const shouldFetch =
+  //   page !== undefined && limit !== undefined && searchQuery !== undefined;
+
+  // // 使用有效的参数或默认值构建查询参数
+  // const queryParams = new URLSearchParams({
+  //   page: page ?? defaultPage, // 如果page未定义，则使用默认值
+  //   limit: limit ?? defaultLimit, // 如果limit未定义，则使用默认值
+  //   query: searchQuery ?? "", // 如果searchQuery未定义，则默认为空字符串
+  // }).toString();
 
   const { data, error, isLoading, mutate } = useSWR(
-    shouldFetch ? `/api/project?${queryParams}` : null,
+    url,
+    // shouldFetch ? `/api/project?${queryParams}` : null,
     fetcher
   );
 
@@ -37,7 +54,7 @@ export function useProjects(page, limit, searchQuery) {
   async function createProject(project) {
     try {
       const response = await axiosInstance.post("/api/project", project);
-      mutate();
+      mutate(url);
       return response.data; // 假设成功响应包含了任务数据
     } catch (error) {
       console.error("Error in createProject:", error);
@@ -50,10 +67,70 @@ export function useProjects(page, limit, searchQuery) {
     mutate();
   }
 
-  // 删除项目并更新缓存
+  // // 删除项目并更新缓存
+  // const deleteP = async (id) => {
+  //   const { error } = await axiosInstance.delete(`/api/project/${id}`);
+  //   if (error) {
+  //     throw error;
+  //   }
+  // };
+
   const deleteProject = async (id) => {
+    // const currentProjects = data?.projects ? [...data.projects] : [];
+
+    // await mutate(`/api/project?${queryParams}`, deleteP(id), {
+    //   optimisticData: (projects) =>
+    //     currentProjects.filter((project) => project.id !== id),
+    //   rollbackOnError: true,
+    // });
+
+    // console.log("in pring", url);
+
     await axiosInstance.delete(`/api/project/${id}`);
-    mutate();
+    // mutate();
+
+    // console.log("Current data state2:", data);
+
+    // // 获取当前的项目列表的副本
+    // const currentProjects = data?.projects ? [...data?.projects] : [];
+
+    // // 打印乐观更新前的项目列表
+    // console.log("Before optimistic update:", currentProjects);
+
+    // // 乐观更新
+    // const promise = mutate(
+    //   {
+    //     ...data,
+    //     projects: currentProjects.filter((project) => project.id !== id),
+    //   },
+    //   false // 不重新验证
+    // );
+
+    // await toast.promise(promise, {
+    //   pending: "Mutating data",
+    //   success: "muttation is successfull",
+    //   error: "Mutation failed",
+    // });
+
+    // // 打印乐观更新后的项目列表
+    // console.log(
+    //   "After optimistic update:",
+    //   currentProjects.filter((project) => project.id !== id)
+    // );
+
+    // try {
+    //   // 执行删除操作
+    //   await axiosInstance.delete(`/api/project/${id}`);
+    //   // 可以在这里再次调用 mutate 来确保数据同步
+    // } catch (error) {
+    //   console.error("Error in deleteProject:", error);
+    //   // 回滚更新
+    //   mutate(
+    //     `/api/project?${queryParams}`,
+    //     { ...data, projects: currentProjects },
+    //     false
+    //   );
+    // }
     // // 获取当前的任务列表
     // const currentProjects = data?.projects ? [...data.projects] : [];
 
