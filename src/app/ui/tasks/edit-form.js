@@ -55,12 +55,12 @@ export default function EditInvoiceForm({ task }) {
     // console.log("------>", data);
     try {
       await updateTask(task.id, data);
-      toast.success("Task update successfully!", { autoClose: 2000 });
+      toast.success("Task update successfully!", { autoClose: 1000 });
       setTimeout(() => {
         router.push(`/dashboard/tasks?page=${page}`); // 使用 Router.push 进行跳转
-      }, 2000); // 在显示成功消息 2 秒后跳转
+      }, 1000); // 在显示成功消息 2 秒后跳转
     } catch (error) {
-      toast.error("Failed to update task", { autoClose: 2000 });
+      toast.error("Failed to update task", { autoClose: 1000 });
       console.error("Failed to update task", error);
     }
   };
@@ -235,7 +235,7 @@ export default function EditInvoiceForm({ task }) {
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href={`/dashboard/tasks?page=${currentPage}`}
+          href={`/dashboard/tasks?page=${page}`}
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           取消

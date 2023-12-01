@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-24 11:53:08
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-01 09:58:02
+ * @LastEditTime: 2023-12-01 14:23:40
  * @FilePath: /my-next-dashboard/src/app/dashboard/workflow/page.js
  * @Description:
  *
@@ -68,7 +68,10 @@ export default function Page() {
               url={url}
               mutate={mutate}
             />
-            <div className="mt-5 flex w-full justify-center">
+            <div className="mt-5 flex w-full items-center justify-center">
+              <span class="text-sm text-gray-700 pr-6">
+                Total <span class="font-semibold">{total}</span> items
+              </span>
               <Pagination
                 total={total}
                 currentPage={page}

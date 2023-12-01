@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 17:20:03
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-01 10:31:40
+ * @LastEditTime: 2023-12-01 14:12:34
  * @FilePath: /my-next-dashboard/src/app/ui/workflow/buttons.js
  * @Description:
  *
@@ -28,7 +28,7 @@ export function CreateWorkflow() {
   );
 }
 
-export function UpdateWorkflow({ id, page }) {
+export function UpdateWorkflow({ id, page, className }) {
   return (
     <Link
       href={{
@@ -36,14 +36,16 @@ export function UpdateWorkflow({ id, page }) {
         query: { page: page },
       }}
       // as={`/dashboard/workflow/${id}/edit`}
-      className="rounded-md border p-2 hover:bg-gray-100"
+      className={className}
     >
-      <AiFillEdit className="w-5" />
+      {/* <AiFillEdit className="w-5" /> */}
+      <AiFillEdit className="h-4 w-4" aria-hidden="true" />
+      <span className="text-sm font-medium">Edit</span>
     </Link>
   );
 }
 
-export function DeleteWorkflow({ id, mutate }) {
+export function DeleteWorkflow({ id, mutate, className }) {
   const { deleteProject } = useProjects();
 
   const handleDelete = async (e) => {
@@ -105,8 +107,10 @@ export function DeleteWorkflow({ id, mutate }) {
         toast.success("Workflow deleted successfully!", { autoClose: 1000 });
         // 可选: 显示删除成功的消息
       } catch (error) {
+        mutate();
         toast.error("Failed to delete Workflow", { autoClose: 1000 });
         // 可选: 处理错误情况
+
         console.error("Error deleting Workflow", error);
       }
     }
@@ -129,11 +133,11 @@ export function DeleteWorkflow({ id, mutate }) {
   };
 
   return (
-    <form onSubmit={handleDelete}>
-      <button className="rounded-md border p-2 hover:bg-gray-100">
-        <span className="sr-only">Delete</span>
-        <AiOutlineDelete className="w-5" />
-      </button>
-    </form>
+    <button className={className} type="button" onClick={handleDelete}>
+      {/* <span className="sr-only">Delete</span>
+        <AiOutlineDelete className="w-5" /> */}
+      <AiOutlineDelete className="h-4 w-4" aria-hidden="true" />
+      <span className="text-sm font-medium">Delete</span>
+    </button>
   );
 }

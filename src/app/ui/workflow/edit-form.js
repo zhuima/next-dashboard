@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-15 18:47:10
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-27 15:09:44
+ * @LastEditTime: 2023-12-01 11:19:49
  * @FilePath: /my-next-dashboard/src/app/ui/workflow/edit-form.js
  * @Description:
  *
@@ -78,7 +78,7 @@ export default function EditProjectForm({ project }) {
       toast.success("Project update successfully!", { autoClose: 2000 });
       setTimeout(() => {
         router.push(`/dashboard/workflow?page=${page}`); // 使用 Router.push 进行跳转
-      }, 2000); // 在显示成功消息 2 秒后跳转
+      }, 1000); // 在显示成功消息 2 秒后跳转
     } catch (error) {
       toast.error("Failed to update project", { autoClose: 2000 });
       console.error("Failed to update project", error);

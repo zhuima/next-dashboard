@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-16 10:05:03
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-25 07:56:08
+ * @LastEditTime: 2023-12-01 10:40:10
  * @FilePath: /my-next-dashboard/src/app/hooks/useTasks.js
  * @Description:
  *
@@ -53,7 +53,7 @@ export function useTasks(page, limit, searchQuery) {
   // 删除任务并更新缓存
   const deleteTask = async (id) => {
     await axiosInstance.delete(`/api/task/${id}`);
-    mutate();
+    // mutate();
     // // 获取当前的任务列表
     // const currentTasks = data?.tasks ? [...data.tasks] : [];
 
