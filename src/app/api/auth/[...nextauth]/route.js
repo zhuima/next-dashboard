@@ -59,21 +59,18 @@ const handler = NextAuth({
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, account, profile }) {
+    async jwt({ token, user }) {
       // Persist the OAuth access_token and or the user id to the token right after signin
-      if (account) {
-        console.log("token --->", token);
-        console.log("account --->", token);
+      // 用户初次登录时，user 对象会被提供
+      if (user) {
+        // 将用户名添加到 JWT 令牌中
+        token.username = user.username;
       }
       return token;
     },
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       // Send properties to the client, like an access_token and user id from a provider.
-      if (token) {
-        session.accessToken = token.accessToken;
-        session.user = {};
-        session.user.id = token.id;
-      }
+      session.user.username = token.username;
       return session;
     },
   },

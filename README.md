@@ -46,3 +46,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 [how-to-setup-authentication-and-protected-route-in-next-js-13-with-next-auth-js](https://www.freecodecamp.org/news/how-to-setup-authentication-and-protected-route-in-next-js-13-with-next-auth-js/)
 
 [how-do-you-access-session-user-id-in-nextauth](https://stackoverflow.com/questions/75465165/how-do-you-access-session-user-id-in-nextauth)
+
+## Tips
+
+中间件保护路由使用的是文件要和app同层次，要不然不生效

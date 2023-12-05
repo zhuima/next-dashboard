@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-12 20:48:52
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-05 15:33:38
+ * @LastEditTime: 2023-12-05 15:48:13
  * @FilePath: /my-next-dashboard/src/app/components/UserBar.js
  * @Description:
  *
@@ -45,16 +45,16 @@ const UserBar = ({ toggleSidebar, isSidebarOpen }) => {
     };
   }, [dropdownRef]);
 
-  if (session) {
-    return (
-      <>
-        Signed in as userID: {session.user.username} <br />
-        name: {session.user.name} <br />
-        email: {session.user.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
-    );
-  }
+  // if (session) {
+  //   return (
+  //     <>
+  //       Signed in as userID: {session.user.username} <br />
+  //       name: {session.user.id} <br />
+  //       email: {session.user.email} <br />
+  //       <button onClick={() => signOut()}>Sign out</button>
+  //     </>
+  //   );
+  // }
 
   return (
     <div className="flex justify-between items-center  p-4  bg-gray-100">
@@ -65,7 +65,7 @@ const UserBar = ({ toggleSidebar, isSidebarOpen }) => {
       <Menu as="div" className="relative inline-block text-left px-4">
         <div>
           <Menu.Button className="inline-flex w-full justify-center rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-white hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
-            追马
+            {session?.user?.username}
             <AiOutlineDown
               className="-mr-1 ml-2 h-5 w-5 text-violet-200 hover:text-violet-100"
               aria-hidden="true"
