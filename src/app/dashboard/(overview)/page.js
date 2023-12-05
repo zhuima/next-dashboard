@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 16:56:21
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-22 11:57:49
+ * @LastEditTime: 2023-12-05 13:53:38
  * @FilePath: /my-next-dashboard/src/app/dashboard/(overview)/page.js
  * @Description:
  *
@@ -10,23 +10,63 @@
  */
 
 import { Suspense } from "react";
-import {
-  AiFillHome,
-} from "react-icons/ai";
-
+import { AiFillHome } from "react-icons/ai";
+import { getServerSession } from "next-auth";
+import CardWrapper, { Card } from "@/app/ui/dashboard/cards";
+import LatestProjects from "@/app/ui/dashboard/latest-projects";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
+import {
+  RevenueChartSkeleton,
+  InvoiceSkeleton,
+  CardsSkeleton,
+} from "@/app/ui/skeletons";
 
 export const metadata = {
   title: "Dashboard",
 };
 
 export default async function Page() {
+  const session = await getServerSession();
+  if (session) {
+    redirect("/");
+  }
+
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[{ label: "首页", Icon: AiFillHome, href: "/dashboard" }]}
       />
-      <h1 className={`mb-4 text-xl md:text-2xl`}>Dashboard</h1>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {/* <Card
+          title="Collected"
+          value={totalPaidInvoices}
+          type="collected"
+        />
+        <Card
+          title="Pending"
+          value={totalPendingInvoices}
+          type="pending"
+        />
+        <Card
+          title="Total Invoices"
+          value={numberOfInvoices}
+          type="invoices"
+        />
+        <Card
+          title="Total Customers"
+          value={numberOfCustomers}
+          type="customers"
+        /> */}
+        <Suspense fallback={<CardsSkeleton />}>
+          <CardWrapper />
+        </Suspense>
+      </div>
+      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
+        {/* <RevenueChart revenue={revenue} /> */}
+        <Suspense fallback={<InvoiceSkeleton />}>
+          <LatestProjects />
+        </Suspense>
+      </div>
     </main>
   );
 }

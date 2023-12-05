@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-12 20:48:52
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-22 10:59:57
+ * @LastEditTime: 2023-12-05 13:50:36
  * @FilePath: /my-next-dashboard/src/app/components/UserBar.js
  * @Description:
  *
@@ -13,6 +13,8 @@ import { useTheme } from "next-themes";
 import { AiOutlineDown } from "react-icons/ai";
 import Image from "next/image";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
+
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
@@ -135,6 +137,9 @@ const UserBar = ({ toggleSidebar, isSidebarOpen }) => {
               <Menu.Item>
                 {({ active }) => (
                   <button
+                    onClick={() => {
+                      signOut();
+                    }}
                     className={`${
                       active ? "bg-violet-500 text-white" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
@@ -150,11 +155,7 @@ const UserBar = ({ toggleSidebar, isSidebarOpen }) => {
                         aria-hidden="true"
                       />
                     )}
-                    <Link
-                      href="/login" // Replace with your logout logic
-                    >
-                      Logout
-                    </Link>
+                    <span>Logout</span>
                   </button>
                 )}
               </Menu.Item>

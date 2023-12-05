@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-12 20:45:23
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-13 16:54:39
+ * @LastEditTime: 2023-12-05 14:03:01
  * @FilePath: /my-next-dashboard/src/app/dashboard/layout.js
  * @Description:
  *
@@ -10,6 +10,6 @@
  */
 import MainLayout from "./mainLayout";
 
-export default function Layout({ children }) {
+export default async function Layout({ children }) {
   return <MainLayout>{children}</MainLayout>;
 }

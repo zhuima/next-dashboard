@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 17:10:50
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-01 14:24:53
+ * @LastEditTime: 2023-12-01 14:33:04
  * @FilePath: /my-next-dashboard/src/app/dashboard/tasks/page.js
  * @Description:
  *
@@ -59,9 +59,9 @@ export default function Page() {
         ) : (
           <>
             <TasksTable tasks={tasks} page={page} mutate={mutate} />
-            <div className="mt-5 flex w-full items-center justify-center">
-              <span class="text-sm text-gray-700 pr-6">
-                Total <span class="font-semibold">{total}</span> items
+            <div className="mt-5 flex w-full items-center justify-center gap-x-6">
+              <span className="text-sm text-gray-700 ">
+                Total <span className="font-semibold">{total}</span> items
               </span>
               <Pagination
                 total={total}

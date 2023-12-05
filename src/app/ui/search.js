@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 17:54:13
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-17 13:32:10
+ * @LastEditTime: 2023-12-01 16:08:28
  * @FilePath: /my-next-dashboard/src/app/ui/search.js
  * @Description:
  *
@@ -10,7 +10,8 @@
  */
 "use client";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineSearch, AiOutlineClose } from "react-icons/ai";
+import { useSWRConfig } from "swr";
 
 import { useDebouncedCallback } from "use-debounce";
 
@@ -18,6 +19,7 @@ export default function Search({ placeholder }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+  const { mutate } = useSWRConfig();
 
   const handleSearch = useDebouncedCallback((term) => {
     const params = new URLSearchParams(searchParams);
@@ -27,8 +29,10 @@ export default function Search({ placeholder }) {
     } else {
       params.delete("query");
     }
-    replace(`${pathname}?${params.toString()}`);
-  }, 300);
+    replace(`${pathname}?${params.toString()}`, undefined, { shallow: true });
+    // 使用 mutate 进行数据请求的节流或防抖
+    // mutate(`${pathname}?${params.toString()}`);
+  }, 500);
 
   return (
     <div className="relative flex flex-1 flex-shrink-0">
@@ -36,6 +40,7 @@ export default function Search({ placeholder }) {
         Search
       </label>
       <input
+        type="search"
         className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
         placeholder={placeholder}
         onChange={(e) => {
