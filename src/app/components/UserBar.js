@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-12 20:48:52
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-05 13:50:36
+ * @LastEditTime: 2023-12-05 15:33:38
  * @FilePath: /my-next-dashboard/src/app/components/UserBar.js
  * @Description:
  *
@@ -14,13 +14,23 @@ import { AiOutlineDown } from "react-icons/ai";
 import Image from "next/image";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-
+import { useRouter } from "next/navigation";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
+import { useSession, signIn } from "next-auth/react";
 
 const UserBar = ({ toggleSidebar, isSidebarOpen }) => {
+  const { data: session } = useSession();
+
   const dropdownRef = useRef(null);
+  const router = useRouter();
+  const handleSignOut = async () => {
+    await signOut({ redirect: false });
+    // 可能需要手动重定向或刷新页面
+    router.push("/login");
+  };
+
   // Click outside to close the dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -34,6 +44,17 @@ const UserBar = ({ toggleSidebar, isSidebarOpen }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownRef]);
+
+  if (session) {
+    return (
+      <>
+        Signed in as userID: {session.user.username} <br />
+        name: {session.user.name} <br />
+        email: {session.user.email} <br />
+        <button onClick={() => signOut()}>Sign out</button>
+      </>
+    );
+  }
 
   return (
     <div className="flex justify-between items-center  p-4  bg-gray-100">
@@ -137,9 +158,7 @@ const UserBar = ({ toggleSidebar, isSidebarOpen }) => {
               <Menu.Item>
                 {({ active }) => (
                   <button
-                    onClick={() => {
-                      signOut();
-                    }}
+                    onClick={handleSignOut}
                     className={`${
                       active ? "bg-violet-500 text-white" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}

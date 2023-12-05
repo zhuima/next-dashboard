@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 16:56:21
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-05 13:53:38
+ * @LastEditTime: 2023-12-05 15:13:01
  * @FilePath: /my-next-dashboard/src/app/dashboard/(overview)/page.js
  * @Description:
  *
@@ -12,6 +12,7 @@
 import { Suspense } from "react";
 import { AiFillHome } from "react-icons/ai";
 import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 import CardWrapper, { Card } from "@/app/ui/dashboard/cards";
 import LatestProjects from "@/app/ui/dashboard/latest-projects";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
@@ -26,11 +27,11 @@ export const metadata = {
 };
 
 export default async function Page() {
-  const session = await getServerSession();
-  if (session) {
-    redirect("/");
-  }
+  // const session = await getServerSession();
 
+  // if (!session) {
+  //   redirect("/login");
+  // }
   return (
     <main>
       <Breadcrumbs

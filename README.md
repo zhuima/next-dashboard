@@ -40,3 +40,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 [nextauth-tut](https://github.com/tomphill/nextauth-tut/blob/main/app/layout.tsx)
 
 [next-dashboard](https://github.com/hugocruzlfc/next-dashboard/blob/99f5199f394a03d052bd1c013ec23b85cc14d1d1/package.json)
+
+[setup-and-use-nextauth-in-nextjs-13-app-directory](https://codevoweb.com/setup-and-use-nextauth-in-nextjs-13-app-directory/)
+
+[how-to-setup-authentication-and-protected-route-in-next-js-13-with-next-auth-js](https://www.freecodecamp.org/news/how-to-setup-authentication-and-protected-route-in-next-js-13-with-next-auth-js/)
+
+[how-do-you-access-session-user-id-in-nextauth](https://stackoverflow.com/questions/75465165/how-do-you-access-session-user-id-in-nextauth)
