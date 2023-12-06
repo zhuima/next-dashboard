@@ -10,7 +10,7 @@
  */
 import axiosInstance from "@/app/lib/axiosInstance";
 
-export async function customAuth(username, password) {
+export async function loginAuth(username, password) {
   try {
     const response = await axiosInstance.post("/api/auth/login", {
       username: username,

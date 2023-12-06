@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 16:34:20
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-05 13:43:27
+ * @LastEditTime: 2023-12-06 14:47:28
  * @FilePath: /my-next-dashboard/src/app/ui/login-form.js
  * @Description:
  *
@@ -20,16 +20,26 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "./button";
 import { useForm } from "react-hook-form";
+import { usePathname, useSearchParams } from "next/navigation";
+
 import * as z from "zod";
 // import { signIn } from "@/app/auth";
 import { signIn } from "next-auth/react";
+
 const FormSchema = z.object({
-  username: z.string().min(3, "UserName is required"),
-  password: z.string().min(6, "Password is required"),
+  username: z
+    .string()
+    .min(3, "Username is too short")
+    .max(20, "Username is too long")
+    .regex(/\./, "Username must include '.'"),
+  password: z.string().min(6, "Password is too short"),
 });
 
 export default function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const url = searchParams.get("callbackUrl") || "/dashboard";
+
   const {
     register,
     handleSubmit,
@@ -41,7 +51,7 @@ export default function LoginForm() {
     // const result = await authenticate(data);
     const result = await signIn("credentials", {
       ...data,
-      // callbackUrl: "/dashboard",
+      callbackUrl: url,
       redirect: false,
     });
 
@@ -49,13 +59,14 @@ export default function LoginForm() {
     // // 这里只处理错误情况，因为成功的重定向由 NextAuth 配置管理
     if (result.error) {
       // 显示错误信息
-      // console.error(result.error);
-      toast.error(result.error);
+      console.error(result.error);
+      toast.error(result.error.toString());
       // throw new Error(result.error);
     }
 
     if (!result?.error) {
-      router.push("/dashboard");
+      // router.push("/dashboard");
+      router.replace(url);
       // router.refresh();
     }
   };
