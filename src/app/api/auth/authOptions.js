@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-12-05 10:41:40
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-06 14:29:17
+ * @LastEditTime: 2023-12-08 11:32:56
  * @FilePath: /my-next-dashboard/src/app/api/auth/authOptions.js
  * @Description:
  *
@@ -69,24 +69,8 @@ const authOptions = {
         );
         if (!response) throw new Error(response.message);
 
-        const user = {
-          id: 22,
-          username: credentials?.username,
-          email: "jsmith@example.com",
-        };
+        const user = response ? response.user : null;
         return user;
-
-        // console.log("response ", response);
-        // if (response) {
-        //   return {
-        //     username: credentials?.username,
-        //     // token: response,
-        //     // id: user.id,
-        //     // email: user.email,
-        //   };
-        // }
-
-        // return null;
       },
     }),
   ],
@@ -98,18 +82,35 @@ const authOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, session }) {
       // Persist the OAuth access_token and or the user id to the token right after signin
       // 用户初次登录时，user 对象会被提供
+      console.log("jwt -----> ", { token, user, session });
       if (user) {
         // 将用户名添加到 JWT 令牌中
-        token.username = user.username;
+        // token.username = user.username;
+        return {
+          ...token,
+          id: user.id,
+          username: user.username,
+        };
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token, user }) {
+      console.log("session -----> ", { session, token, user });
+
       // Send properties to the client, like an access_token and user id from a provider.
-      session.user.username = token.username;
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id,
+          token: token.token,
+          username: token.username,
+        },
+      };
+
       return session;
     },
   },

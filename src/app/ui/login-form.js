@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 16:34:20
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-06 14:47:28
+ * @LastEditTime: 2023-12-07 14:12:37
  * @FilePath: /my-next-dashboard/src/app/ui/login-form.js
  * @Description:
  *
@@ -14,26 +14,14 @@ import {
   AiOutlineArrowRight,
   AiOutlineUser,
 } from "react-icons/ai";
-import Link from "next/link";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "./button";
 import { useForm } from "react-hook-form";
 import { usePathname, useSearchParams } from "next/navigation";
-
-import * as z from "zod";
-// import { signIn } from "@/app/auth";
+import { LoginZodSchema } from "@/schema";
 import { signIn } from "next-auth/react";
-
-const FormSchema = z.object({
-  username: z
-    .string()
-    .min(3, "Username is too short")
-    .max(20, "Username is too long")
-    .regex(/\./, "Username must include '.'"),
-  password: z.string().min(6, "Password is too short"),
-});
 
 export default function LoginForm() {
   const router = useRouter();
@@ -44,7 +32,7 @@ export default function LoginForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(FormSchema) });
+  } = useForm({ resolver: zodResolver(LoginZodSchema) });
 
   const onSubmit = async (data) => {
     console.log("log", data);

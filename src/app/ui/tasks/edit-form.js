@@ -16,16 +16,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useTasks } from "@/app/hooks/useTasks"; // 更新为正确的路径
-
-const FormSchema = z.object({
-  spec: z.string().min(1, "Spec is required"),
-  type: z.string().min(1, "Type is required"),
-  command: z.string().min(1, "Command is required"),
-  description: z.string(),
-  status: z.enum(["active", "disable"], "Status is required"),
-});
+import { TaskZodSchema } from "@/schema";
 
 export default function EditInvoiceForm({ task }) {
   const {
@@ -33,7 +25,7 @@ export default function EditInvoiceForm({ task }) {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(FormSchema),
+    resolver: zodResolver(TaskZodSchema),
     defaultValues: {
       spec: task?.spec,
       type: task?.type,

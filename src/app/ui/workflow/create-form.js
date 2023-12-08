@@ -24,21 +24,9 @@ import { useProjects } from "@/app/hooks/useProjects";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import Link from "next/link";
 import { Button } from "@/app/ui/button";
-
-const FormSchema = z.object({
-  project_name: z.string().min(1, "Spec is required"),
-  git_repo: z.string().min(1, "git_repo is required"),
-  // https://www.reddit.com/r/reactjs/comments/15hup78/how_to_use_shadcn_reacthookform_zod_for_input/ 解决Expected number, received string 报错
-  is_proxy: z.string().transform((v) => Number(v) || 0),
-  language: z.string(),
-  port: z.number(),
-  description: z.string(),
-  owner: z.string(),
-  status: z.enum(["active", "disable"], "Status is required"),
-});
+import { ProjectZodSchema } from "@/schema";
 
 export default function Form() {
   const {
@@ -46,7 +34,7 @@ export default function Form() {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(FormSchema),
+    resolver: zodResolver(ProjectZodSchema),
     defaultValues: {
       project_name: "",
       git_repo: "",
