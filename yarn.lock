@@ -2457,6 +2457,11 @@ queue@^6.0.1:
   dependencies:
     inherits "~2.0.3"
 
+react-complex-tree@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/react-complex-tree/-/react-complex-tree-2.3.2.tgz#52cb5a71fc324b92a5d205e1fe0240945bc146f1"
+  integrity sha512-hLcJKjZVFEYBynbZX7eNcv0qPK+oM/K1p4lk1tTUTE6TJziFCHJ2PPRYOWGjIR0/uk97ibM5GhW2m5FlBKeAhg==
+
 react-dom@18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.2.0.tgz#22aaf38708db2674ed9ada224ca4aa708d821e3d"
