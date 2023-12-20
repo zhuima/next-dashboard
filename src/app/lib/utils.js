@@ -1,3 +1,13 @@
+/*
+ * @Author: zhuima zhuima314@gmail.com
+ * @Date: 2023-11-13 17:36:51
+ * @LastEditors: zhuima zhuima314@gmail.com
+ * @LastEditTime: 2023-12-19 16:58:56
+ * @FilePath: /my-next-dashboard/src/app/lib/utils.js
+ * @Description:
+ *
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
+ */
 export const formatCurrency = (amount) => {
   return (amount / 100).toLocaleString("en-US", {
     style: "currency",
@@ -48,3 +58,23 @@ export const generatePagination = (currentPage, totalPages) => {
     totalPages,
   ];
 };
+
+export const approvalStatusOptions = [
+  { label: "审批中", value: 1 },
+  { label: "通过", value: 2 },
+  { label: "驳回", value: 3 },
+];
+
+export const applyOperateOptions = [
+  { label: "申请", value: 1 },
+  { label: "移交", value: 2 },
+  { label: "通过", value: 3 },
+  { label: "驳回", value: 4 },
+  { label: "回复", value: 5 },
+];
+
+export const userOption = [
+  { label: "用户1", value: "user1" },
+  { label: "用户2", value: "user2" },
+  // ...其他用户选项
+];

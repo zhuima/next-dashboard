@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-12-05 10:41:40
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-08 11:32:56
+ * @LastEditTime: 2023-12-18 14:17:20
  * @FilePath: /my-next-dashboard/src/app/api/auth/authOptions.js
  * @Description:
  *
@@ -70,6 +70,10 @@ const authOptions = {
         if (!response) throw new Error(response.message);
 
         const user = response ? response.user : null;
+        console.log(
+          "《〈《〈《〈《〈《〈《〈《〈《〈《〈《〈《〈《〈《〈《〈",
+          user
+        );
         return user;
       },
     }),
@@ -85,28 +89,41 @@ const authOptions = {
     async jwt({ token, user, session }) {
       // Persist the OAuth access_token and or the user id to the token right after signin
       // 用户初次登录时，user 对象会被提供
-      console.log("jwt -----> ", { token, user, session });
+      // console.log("jwt -----> ", { token, user, session });
+      // console.log("jwt -----++++++++++++++++++++> ", user.token);
+      // console.log("jwt -----++++++++++++++++++++> ", user);
+
       if (user) {
         // 将用户名添加到 JWT 令牌中
         // token.username = user.username;
+        // console.log("jwt -----++++++++++++++++++++> ", user.id);
+
         return {
           ...token,
-          id: user.id,
+          id: user.ID,
+          role: user.role_id,
           username: user.username,
+          accessToken: user.token,
         };
       }
       return token;
     },
     async session({ session, token, user }) {
-      console.log("session -----> ", { session, token, user });
+      // console.log("session -----> ", { session, token, user });
+      // console.log(
+      //   "session ----++++++++++++++++++++ -----> ",
+      //   token.accessToken
+      // );
 
+      console.log("session -----> ", { token });
       // Send properties to the client, like an access_token and user id from a provider.
       return {
         ...session,
         user: {
           ...session.user,
           id: token.id,
-          token: token.token,
+          role: token.role,
+          accessToken: token.accessToken,
           username: token.username,
         },
       };

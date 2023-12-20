@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-12 20:45:23
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-20 11:34:18
+ * @LastEditTime: 2023-12-19 14:22:24
  * @FilePath: /my-next-dashboard/tailwind.config.js
  * @Description:
  *

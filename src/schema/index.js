@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-12-07 11:46:06
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-07 14:22:45
+ * @LastEditTime: 2023-12-20 10:51:04
  * @FilePath: /my-next-dashboard/src/schema/index.js
  * @Description:
  *
@@ -49,4 +49,12 @@ export const ProjectZodSchema = z.object({
   description: z.string(),
   owner: z.string(),
   status: z.enum(["active", "disable"], "Status is required"),
+  approver: z.string().min(1, "Approver is required"),
+  assigner: z.string(),
+});
+
+export const ProgressSchema = z.object({
+  operate: z.string(),
+  next: z.string().optional(),
+  opinion: z.string(),
 });

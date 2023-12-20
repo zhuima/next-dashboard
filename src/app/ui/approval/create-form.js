@@ -2,8 +2,8 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-15 18:47:10
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-15 15:33:49
- * @FilePath: /my-next-dashboard/src/app/ui/workflow/create-form.js
+ * @LastEditTime: 2023-12-18 14:15:54
+ * @FilePath: /my-next-dashboard/src/app/ui/approval/create-form.js
  * @Description:
  *
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
@@ -20,14 +20,14 @@ import {
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+import { useApprovals } from "@/app/hooks/useApprovals";
 import { useProjects } from "@/app/hooks/useProjects";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { Button } from "@/app/ui/button";
 import { ProjectZodSchema } from "@/schema";
-
+import { useSession } from "next-auth/react";
 export default function Form() {
   const {
     register,
@@ -49,6 +49,8 @@ export default function Form() {
     },
   });
   const router = useRouter();
+  const { data: session } = useSession();
+  const { createApproval } = useApprovals(); // 使用 useProjects 钩子获取 createProject 函数
   const { createProject } = useProjects(); // 使用 useProjects 钩子获取 createProject 函数
 
   const onSubmit = async (data) => {
@@ -58,12 +60,42 @@ export default function Form() {
     //   is_proxy: Number(data.is_proxy),
     // };
 
+    const projectData = {
+      project_name: data.project_name,
+      git_repo: data.git_repo,
+      is_proxy: data.is_proxy,
+      language: data.language,
+      port: data.port,
+      description: data.description,
+      create_user_id: session.user.id,
+      status: data.status,
+    };
     try {
-      await createProject(data);
-      toast.success("Project created successfully!");
-      setTimeout(() => {
-        router.push("/dashboard/workflow"); // 使用 Router.push 进行跳转
-      }, 2000); // 在显示成功消息 2 秒后跳转
+      // 从第一步的响应中获取必要的数据
+      const projectResponse = await createProject(projectData);
+      console.log("projectResponse------>", projectResponse);
+
+      // 第二步：使用第一步返回的数据创建项目
+      if (projectResponse && projectResponse.projectID) {
+        const approvalData = {
+          title: "创建" + data.project_name + "项目申请",
+          relatedId: projectResponse.projectID, //依赖projectData数据请求之后返回的结果中的数据
+          status: 1,
+          approver: data.approver,
+          assigner: data.assigner,
+          create_user_id: session.user.id,
+        };
+
+        console.log("approvalData------>", approvalData);
+
+        await createApproval(approvalData);
+        toast.success("Project created successfully!");
+        setTimeout(() => {
+          router.push("/dashboard/approval/base"); // 使用 Router.push 进行跳转
+        }, 2000); // 在显示成功消息 2 秒后跳转
+      } else {
+        throw new Error("Invalid response data from the approval creation.");
+      }
     } catch (error) {
       toast.error("Failed to create project");
       console.error("Failed to create project", error);
@@ -471,7 +503,7 @@ export default function Form() {
 
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/workflow"
+          href="/dashboard/approval/base"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           取消

@@ -13,6 +13,8 @@ import {
   AiOutlineTable,
 } from "react-icons/ai";
 
+import { LiaStampSolid } from "react-icons/lia";
+
 import CMDBLogo from "@/app/ui/cmdb-logo";
 
 const SubMenu = ({ items, isActive }) => {
@@ -136,12 +138,31 @@ const Navbar = ({ isMenuOpen }) => {
           ]}
         />
         <NavbarItem
-          title="Menu 3"
-          isOpen={openMenu === "Menu 3"}
-          onClick={() => handleMenuClick("Menu 3")}
+          title="审批管理"
+          isOpen={openMenu === "审批管理"}
+          Icon={LiaStampSolid}
+          onClick={() => handleMenuClick("审批管理")}
           subItems={[
-            { title: "Submenu 3-1", href: "/dashboard/menu3/sub1" },
-            { title: "Submenu 3-2", href: "/dashboard/menu3/sub2" },
+            {
+              title: "发起审批",
+              Icon: AiOutlineSchedule,
+              href: "/dashboard/approval/new",
+            },
+            {
+              title: "我发起的",
+              Icon: AiOutlineSchedule,
+              href: "/dashboard/approval/my",
+            },
+            {
+              title: "我审批的",
+              Icon: AiOutlineSchedule,
+              href: "/dashboard/approval/assign-me",
+            },
+            {
+              title: "所有审批",
+              Icon: AiOutlineSchedule,
+              href: "/dashboard/approval/base",
+            },
           ]}
         />
 

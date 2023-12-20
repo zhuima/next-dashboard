@@ -2,8 +2,8 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-16 10:05:03
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-15 17:15:20
- * @FilePath: /my-next-dashboard/src/app/hooks/useProjects.js
+ * @LastEditTime: 2023-12-15 17:14:19
+ * @FilePath: /my-next-dashboard/src/app/hooks/useApprovals.js
  * @Description:
  *
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
@@ -14,46 +14,20 @@ import { toast } from "react-toastify";
 import { fetcher } from "@/app/lib/fetcher";
 
 // export function useProjects(page, limit, searchQuery) {
-export function useProjects(url) {
-  // 定义默认参数
-  // console.log("request url -----+++++++++++++++++++++++++++", url);
-
-  // // 构建带有分页和搜索查询参数的URL
-  // const queryParams = new URLSearchParams({
-  //   page: page,
-  //   size: limit,
-  //   query: searchQuery ?? "", // 假设API支持`q`作为搜索参数
-  // }).toString();
-  // console.log("log----> after for hook", page, limit);
-
-  // // 当page, limit或searchQuery为undefined时，不发送请求
-  // const shouldFetch =
-  //   page !== undefined && limit !== undefined && searchQuery !== undefined;
-
-  // // 检查是否应该发送请求
-  // const shouldFetch =
-  //   page !== undefined && limit !== undefined && searchQuery !== undefined;
-
-  // // 使用有效的参数或默认值构建查询参数
-  // const queryParams = new URLSearchParams({
-  //   page: page ?? defaultPage, // 如果page未定义，则使用默认值
-  //   limit: limit ?? defaultLimit, // 如果limit未定义，则使用默认值
-  //   query: searchQuery ?? "", // 如果searchQuery未定义，则默认为空字符串
-  // }).toString();
-
+export function useApprovals(url) {
   const { data, error, isLoading, mutate } = useSWR(
     url,
     // shouldFetch ? `/api/project?${queryParams}` : null,
     fetcher
   );
 
-  const projects = data?.projects || [];
+  const approvals = data?.approvals || [];
   const total = data?.total || 1; // 假设API返回总任务数
 
   // ...保留其他方法
-  async function createProject(project) {
+  async function createApproval(approval) {
     try {
-      const response = await axiosInstance.post("/api/project", project);
+      const response = await axiosInstance.post("/api/approval", approval);
       mutate(url);
       return response.data; // 假设成功响应包含了任务数据
     } catch (error) {
@@ -155,10 +129,10 @@ export function useProjects(url) {
 
   return {
     isLoading,
-    projects,
+    approvals,
     error,
     total, // 返回总任务数
-    createProject,
+    createApproval,
     updateProject,
     deleteProject,
     mutate,

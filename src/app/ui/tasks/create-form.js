@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-15 18:47:10
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-11-24 14:13:15
+ * @LastEditTime: 2023-12-15 15:30:26
  * @FilePath: /my-next-dashboard/src/app/ui/tasks/create-form.js
  * @Description:
  *
@@ -40,6 +40,7 @@ export default function Form() {
       command: "",
       description: "",
       status: "active",
+
     },
   });
   const router = useRouter();
