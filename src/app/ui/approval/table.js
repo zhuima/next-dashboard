@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-15 18:47:10
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-19 17:17:03
+ * @LastEditTime: 2023-12-20 13:57:17
  * @FilePath: /my-next-dashboard/src/app/ui/approval/table.js
  * @Description:
  *
@@ -24,6 +24,8 @@ import {
   approvalStatusOptions,
   applyOperateOptions,
   userOption,
+  BusinessOptions,
+  RenderStatusComponent,
 } from "@/app/lib/utils";
 import ApprovalStatus from "./status";
 
@@ -40,6 +42,7 @@ export default function WorkflowTable({ approvals, page, mutate }) {
     setIsOpen(false); // 关闭抽屉
     setSelectedId(null); // 清除选中的审批 ID
   };
+
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -84,6 +87,7 @@ export default function WorkflowTable({ approvals, page, mutate }) {
                 <th scope="col" className="px-3 py-5 font-medium">
                   审批人
                 </th>
+
                 {/* <th scope="col" className="px-3 py-5 font-medium">
                   Language
                 </th>
@@ -121,21 +125,13 @@ export default function WorkflowTable({ approvals, page, mutate }) {
                   <td className="whitespace-nowrap px-3 py-3">
                     {approval.description}
                   </td> */}
+
                   <td className="whitespace-nowrap px-3 py-3">
-                    {(() => {
-                      const option = approvalStatusOptions.find(
-                        (o) => o.value === approval.status
-                      );
-                      if (option) {
-                        return (
-                          <ApprovalStatus
-                            status={option.value}
-                            label={option.label}
-                          />
-                        );
-                      }
-                      return "未知状态";
-                    })()}
+                    <RenderStatusComponent
+                      options={approvalStatusOptions}
+                      currentValue={approval.status}
+                      Component={ApprovalStatus}
+                    />
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">

@@ -107,3 +107,19 @@ table.fc-col-header {
   font-size: 1.5em;
   padding: 5px 10px 0px;
 } */
+
+/* 自定义滚动条的宽度和轨道颜色 */
+.project-scrollbar::-webkit-scrollbar {
+  width: 2px; /* 调整滚动条的宽度 */
+}
+
+/* 自定义滚动条的滑块 */
+.project-scrollbar::-webkit-scrollbar-thumb {
+  background: #a0aec0; /* 滑块颜色 */
+  border-radius: 2px;
+}
+
+/* 滚动条滑块在hover时的样式 */
+.project-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #718096; /* 滑块hover颜色 */
+}

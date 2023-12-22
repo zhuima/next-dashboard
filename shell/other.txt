@@ -1,0 +1,14 @@
+java	基础信息内部统一服务,需要内部统一的域名.域名内部环境可以访问到,无论线上线下	meishi-thrid-common	git@gitlab.op.dajie-inc.com:meishiyi/backend/third-part/meishi-thrid-common.git			http://thrid-comm.meitums.cn	9253		李伟	
+java	大数据本地团购管理系统后端	meishi-dylife-manage-backend	git@gitlab.op.dajie-inc.com:account-center/meishi-dylife-manage.git			http://ms-dylive-manager.meitums.cn 9257		寇威	
+java	抖音本地生活服务项目	meishi-business-life	git@gitlab.op.dajie-inc.com:meishiyi/backend/meishi-business-life			http://douyin-life.meitums.cn	9261		李伟	
+java	SCRM切换回调企微和圈量项目	meishi-qw-service	git@gitlab.op.dajie-inc.com:meishiyi/backend/meishi-qw-service.git			http://dataplatform.meitums.cn	9262		王玉超	
+java	美数运营中台	bigdata-meishu-manage	git@gitlab.op.dajie-inc.com:account-center/bigdata-meishu-manage.git			https://mp-bigdata-api.meitums.cn	9263		寇威	
+java	ES服务-ms-openapi-service服务 ms-openapi-service	git@gitlab.op.dajie-inc.com:meishitong/es/ms-openapi-service.git			http://10.12.64.238 9267		奥旭强	
+node.js	美事易用户管理前端admin项目 meishiyi-business-admin	git@gitlab.op.dajie-inc.com:meishiyi/frontend/meishiyi-business-admin.git	""	80	 	王增城	
+node.js	商家端的前端项目	meishi-msdd-web	git@gitlab.op.dajie-inc.com:meishiyi/frontend/msdd-web.git	""	80		王增城	
+java	 原git地址：git@gitlab.op.dajie-inc.com:data-collection/spiderschedule.git  已下线 scheduleplatform git@gitlab.op.dajie-inc.com:data-collection/scheduleplatform.git 		9118		余坚	
+nodejs	商家端项目运营管理和维护koc任务管理发布商家信息管理koc商家运营后台管理系统,前端项目 ms-business-system git@gitlab.op.dajie-inc.com:meishiyi/frontend/ms-business-system.git		http://env-koc-manager.dajie-inc.com	9227		李伟
+node.js	美事易B端前端WEB项目	meishiyi-business-web	git@gitlab.op.dajie-inc.com:meishiyi/frontend/meishiyi-business-web.git		""	9109		王增城	
+java	邮件发送网关服务	ms-mail-gateway	git@gitlab.op.dajie-inc.com:ms-sms/ms-mail-gateway.git			https://mail.meitums.com	9228		魏松林	
+java	大数据后台管理系统后端	ruoyi-admin git@gitlab.op.dajie-inc.com:wei.kou/bigdata-manager-system.git			https://big-admin-api.meitums.cn	9256		寇威	
+java	美事大数据标签服务、已下线 label_servicehedule	git@gitlab.op.dajie-inc.com:data-collection/labelservice.git 		https://labelservice.meitums.com	9119		余坚	

@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-15 18:47:10
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-18 14:15:54
+ * @LastEditTime: 2023-12-20 11:36:04
  * @FilePath: /my-next-dashboard/src/app/ui/approval/create-form.js
  * @Description:
  *
@@ -26,15 +26,17 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { Button } from "@/app/ui/button";
-import { ProjectZodSchema } from "@/schema";
+import { ProjectApprovalZodSchema } from "@/schema";
 import { useSession } from "next-auth/react";
+import { BusinessOptions } from "@/app/lib/utils";
+
 export default function Form() {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(ProjectZodSchema),
+    resolver: zodResolver(ProjectApprovalZodSchema),
     defaultValues: {
       project_name: "",
       git_repo: "",
@@ -43,6 +45,7 @@ export default function Form() {
       port: 8080,
       description: "",
       owner: "",
+      business: "",
       status: "active",
       approver: "",
       assigner: "",
@@ -66,6 +69,7 @@ export default function Form() {
       is_proxy: data.is_proxy,
       language: data.language,
       port: data.port,
+      business: data.business,
       description: data.description,
       create_user_id: session.user.id,
       status: data.status,
@@ -334,6 +338,48 @@ export default function Form() {
             </div>
           </div>
         </div>
+
+        <div className="-mx-3 flex flex-wrap mt-5">
+          <div className="w-full px-3 sm:w-1/2">
+            <div className="mb-4">
+              <label
+                htmlFor="business"
+                className="mb-2 block text-sm font-medium"
+              >
+                所属业务线
+              </label>
+              <div className="relative">
+                <select
+                  id="business"
+                  {...register("business")}
+                  className="w-full rounded-md border border-[#e0e0e0] bg-white pl-10 py-2 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                >
+                  <option value="" disabled>
+                    Select Project business
+                  </option>
+
+                  {BusinessOptions.map((business) => (
+                    <option key={business.value} value={business.value}>
+                      {business.label}
+                    </option>
+                  ))}
+                </select>
+                <FcClock className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+              </div>
+
+              {errors?.business?.message ? (
+                <div
+                  id="customer-error"
+                  aria-live="polite"
+                  className="mt-2 text-sm text-red-500"
+                >
+                  {errors.business.message}
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+
         {/* Task Description */}
         <div className="mt-4 mb-4">
           <label
@@ -413,7 +459,7 @@ export default function Form() {
           ) : null}
         </fieldset>
 
-        <div className="-mx-3 flex flex-wrap ">
+        <div className="-mx-3 flex flex-wrap mt-5">
           <div className="w-full px-3 sm:w-1/2">
             <div className="mb-4">
               <label

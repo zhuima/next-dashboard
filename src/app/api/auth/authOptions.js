@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-12-05 10:41:40
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-18 14:17:20
+ * @LastEditTime: 2023-12-22 10:48:07
  * @FilePath: /my-next-dashboard/src/app/api/auth/authOptions.js
  * @Description:
  *
@@ -129,6 +129,17 @@ const authOptions = {
       };
 
       return session;
+    },
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user;
+      const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
+      if (isOnDashboard) {
+        if (isLoggedIn) return true;
+        return false; // Redirect unauthenticated users to login page
+      } else if (isLoggedIn) {
+        return Response.redirect(new URL("/login", nextUrl));
+      }
+      return true;
     },
   },
 };

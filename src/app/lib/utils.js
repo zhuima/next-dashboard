@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-13 17:36:51
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-19 16:58:56
+ * @LastEditTime: 2023-12-20 14:10:30
  * @FilePath: /my-next-dashboard/src/app/lib/utils.js
  * @Description:
  *
@@ -78,3 +78,27 @@ export const userOption = [
   { label: "用户2", value: "user2" },
   // ...其他用户选项
 ];
+
+export const BusinessOptions = [
+  { label: "大数据", value: "bigData" },
+  { label: "美事美选", value: "meishi" },
+  { label: "美事通", value: "meishitong" },
+  { label: "运维", value: "ops" },
+  { label: "前端", value: "frontend" },
+];
+
+export const RenderStatusComponent = ({ options, currentValue, Component }) => {
+  const option = options.find((o) => o.value === currentValue);
+  if (option) {
+    if (Component) {
+      return <Component status={option.value} label={option.label} />;
+    }
+    // 返回一个简单的 JSX 元素
+    return (
+      <span status={option.value} label={option.label}>
+        {option.label}
+      </span>
+    );
+  }
+  return "待分配";
+};

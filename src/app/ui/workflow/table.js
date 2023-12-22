@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-11-15 18:47:10
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-01 14:13:57
+ * @LastEditTime: 2023-12-20 14:10:47
  * @FilePath: /my-next-dashboard/src/app/ui/workflow/table.js
  * @Description:
  *
@@ -18,6 +18,13 @@ import {
 import { Menu } from "@headlessui/react";
 import { UpdateWorkflow, DeleteWorkflow } from "@/app/ui/workflow/buttons";
 import WorkflowStatus from "@/app/ui/workflow/status";
+import {
+  approvalStatusOptions,
+  applyOperateOptions,
+  userOption,
+  BusinessOptions,
+  RenderStatusComponent,
+} from "@/app/lib/utils";
 
 export default function WorkflowTable({ projects, page, mutate }) {
   return (
@@ -68,6 +75,9 @@ export default function WorkflowTable({ projects, page, mutate }) {
                   Language
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
+                  业务线
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
                   Description
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
@@ -97,6 +107,13 @@ export default function WorkflowTable({ projects, page, mutate }) {
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {project.language}
+                  </td>
+
+                  <td className="whitespace-nowrap px-3 py-3">
+                    <RenderStatusComponent
+                      options={BusinessOptions}
+                      currentValue={project.business}
+                    />
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {project.description}

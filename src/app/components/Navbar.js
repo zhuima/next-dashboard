@@ -129,11 +129,11 @@ const Navbar = ({ isMenuOpen }) => {
           ]}
         />
         <NavbarItem
-          title="Menu 2"
-          isOpen={openMenu === "Menu 2"}
-          onClick={() => handleMenuClick("Menu 2")}
+          title="项目信息"
+          isOpen={openMenu === "项目信息"}
+          onClick={() => handleMenuClick("项目信息")}
           subItems={[
-            { title: "Submenu 2-1", href: "/dashboard/menu2/sub1" },
+            { title: "项目列表", href: "/dashboard/project/tree" },
             { title: "Submenu 2-2", href: "/dashboard/menu2/sub2" },
           ]}
         />

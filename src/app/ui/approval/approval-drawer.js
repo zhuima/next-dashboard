@@ -2,7 +2,7 @@
  * @Author: zhuima zhuima314@gmail.com
  * @Date: 2023-12-18 15:35:29
  * @LastEditors: zhuima zhuima314@gmail.com
- * @LastEditTime: 2023-12-20 10:57:35
+ * @LastEditTime: 2023-12-20 11:03:05
  * @FilePath: /my-next-dashboard/src/app/ui/approval/approval-drawer.js
  * @Description:
  *
@@ -72,7 +72,6 @@ const DrawerBody = ({ approvalId, closeDrawer }) => {
         >
           {tag.label}
         </span>
-
         <h5>{approval?.title}</h5>
       </div>
       <div className="py-5">

@@ -1,0 +1,12 @@
+nodejs	宝尊前端项目	ms-baozun	git@gitlab.op.dajie-inc.com:meishiyi/frontend/ms-baozun.git			https://vip.meitums.com 		李伟	
+nodejs OMS-达人看板工具 wxd-meitu-vue <git@gitlab.op.dajie-inc.com>:ms-ued/wxd-meitu.git   https://wxd.meitums.cn  姚楠楠 
+nodejs	知识付费-课程体系H5 ms-fn-h5	git@gitlab.op.dajie-inc.com:ms-ued/ms-fn-h5.git			https://fn.meitums.cn		马晓青	
+nodejs	大数据本地团购管理系统前端	meishi-dylife-manage-frontend	git@gitlab.op.dajie-inc.com:account-center/meishi-dylife-manage.git			https://ms-dylive-manager.meitums.cn	80 
+html+css	视听协会思政课-视频H5 cnsa-szk git@gitlab.op.dajie-inc.com:ms-ued/h5-group/cnsa-szk.git 		https://szk.meitums.cn		崔云贤	
+nodejs	美事通精简版h5签约	mst-offer	git@gitlab.op.dajie-inc.com:ms-ued/mst-offer.git 		https://offer.meishitong168.cn		姚楠楠	
+nodejs	美事通offer mst-offer	http://gitlab.op.dajie-inc.com/ms-ued/mst-offer.git			https://offer.meishitong168.cn/login		姚楠楠	
+nodejs	大数据后台管理系统前端	ruoyi-ui git@gitlab.op.dajie-inc.com:wei.kou/bigdata-manager-system.git			https://big-admin.meitums.cn	
+nodejs 本地生活代运营管理后台	grouppurchasing-manage	git@gitlab.op.dajie-inc.com:ms-ued/grouppurchasing-manage.git			https://partner.meitums.cn/		崔云贤	
+nodejs	本地生活招募报名H5 localliferecruit-h5	git@gitlab.op.dajie-inc.com:ms-ued/localliferecruit-h5.git			https://offer.meitums.cn		马晓青	
+nodejs	crm邮件审批 ms-crm-ots	git@gitlab.op.dajie-inc.com:ms-ued/ms-crm-ots.git 		https://crm-ots.meitums.cn		韩志亮	
+nodejs	妙探-本地生活直播服务运营系统 ms-life-creator	git@gitlab.op.dajie-inc.com:ms-ued/web-group/ms-life-creator.git			https://lifecreator.meitums.cn/		崔云贤	

@@ -29,7 +29,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { Button } from "@/app/ui/button";
-import { ProjectZodSchema } from "@/schema";
+import { ProjectApprovalZodSchema } from "@/schema";
 // import component 👇
 import Drawer from "react-modern-drawer";
 
@@ -42,7 +42,7 @@ export default function EditProjectForm({ project }) {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(ProjectZodSchema),
+    resolver: zodResolver(ProjectApprovalZodSchema),
     defaultValues: {
       project_name: project?.project_name,
       git_repo: project?.git_repo,
