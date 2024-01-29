@@ -65,7 +65,7 @@ export default function DutyInfo() {
       start: date.startStr,
       end: date.endStr,
       title: eventName,
-      user: eventUser,
+      dutyuid: eventUser,
       backgroundColor: eventColor,
     };
     try {
@@ -98,7 +98,8 @@ export default function DutyInfo() {
       start: start,
       end: end,
       title: eventName,
-      user: eventUser,
+      // 这里存储user id
+      dutyuid: eventUser,
       backgroundColor: eventColor,
     };
 
@@ -116,6 +117,7 @@ export default function DutyInfo() {
 
   // 点击事件显示详情
   const handleEventClick = (clickInfo) => {
+    console.log("select envent", clickInfo.event)
     setSelectedEvent(clickInfo.event);
     setIsModalInfoOpen(true); // 打开模态框
   };
@@ -123,7 +125,7 @@ export default function DutyInfo() {
   // 拖拽
   const handleEventDrop = async (dropInfo) => {
     // If the selected date is today or in the future, proceed to open the modal
-    // console.log("drop event---->", dropInfo.event);
+    console.log("drop event---->", dropInfo.event);
     const data = {
       id: Number(dropInfo.event.id),
       start: dropInfo.event.startStr,
@@ -145,7 +147,7 @@ export default function DutyInfo() {
   // 改变日程
   const handleEventResize = async (resizeInfo) => {
     // If the selected date is today or in the future, proceed to open the modal
-    // console.log("resize event---->", resizeInfo.event);
+    console.log("resize event---->", resizeInfo.event);
     const data = {
       id: Number(resizeInfo.event.id),
       start: resizeInfo.event.startStr,
@@ -218,7 +220,7 @@ export default function DutyInfo() {
       />
 
       {/* 日历表格 */}
-      <div className="w-full  h-screen">
+      <div className="w-full  min-h-screen">
         <div className="mt-4  md:mt-8">
           <FullCalendar
             defaultView="dayGridWeek"

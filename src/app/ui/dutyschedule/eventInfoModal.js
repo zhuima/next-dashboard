@@ -17,8 +17,14 @@ import {
   AiOutlineClose,
 } from "react-icons/ai";
 import { HiOutlinePencil } from "react-icons/hi";
+import { RoleOptions } from "@/app/lib/utils";
+
 
 const EventInfoModal = ({ event, isOpen, onClose, onEdit }) => {
+
+  // Find the object with value equal to 1
+  const roleObject = RoleOptions.find(option => option.value === event?.extendedProps.user?.role_id);
+
   if (!isOpen || !event) {
     return null;
   }
@@ -29,7 +35,7 @@ const EventInfoModal = ({ event, isOpen, onClose, onEdit }) => {
 
   const isPastEvent = eventStartDate < today;
 
-  console.log("isopen", isOpen, event, onEdit);
+  console.log("display isopen", isOpen, event, onEdit, event.user?.extendedProps);
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
@@ -69,7 +75,7 @@ const EventInfoModal = ({ event, isOpen, onClose, onEdit }) => {
                     {/* Replace these with actual event handlers and icons */}
                     <AiOutlinePlus
                       className="h-5 w-5 text-gray-500 cursor-pointer hover:text-gray-700"
-                      onClick={() => {}}
+                      onClick={() => { }}
                     />
                     {!isPastEvent && (
                       <HiOutlinePencil
@@ -98,11 +104,11 @@ const EventInfoModal = ({ event, isOpen, onClose, onEdit }) => {
                     <span className="text-gray-500">Note:</span>
                     <span className="col-span-4">{event.title}</span>
                     <span className="text-gray-500">Role:</span>
-                    <span className="col-span-4">{event.role}</span>
+                    <span className="col-span-4">{roleObject?.label}</span>
                     <span className="text-gray-500">User:</span>
-                    <span className="col-span-4">{event.user}</span>
+                    <span className="col-span-4">{event.extendedProps?.user?.nickname}</span>
                     <span className="text-gray-500">E-Mail:</span>
-                    <span className="col-span-4">{event.email}</span>
+                    <span className="col-span-4">{event.extendedProps?.user?.email}</span>
                     <span className="text-gray-500">Call:</span>
                     <span className="col-span-4">{event.call}</span>
                     {/* Repeat for each piece of content */}

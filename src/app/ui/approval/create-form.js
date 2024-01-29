@@ -19,44 +19,89 @@ import {
 } from "react-icons/fc";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useSWR, { mutate } from "swr";
+
 import { useRouter } from "next/navigation";
 import { useApprovals } from "@/app/hooks/useApprovals";
 import { useProjects } from "@/app/hooks/useProjects";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { Button } from "@/app/ui/button";
 import { ProjectApprovalZodSchema } from "@/schema";
 import { useSession } from "next-auth/react";
-import { BusinessOptions } from "@/app/lib/utils";
+import { BusinessOptions, TypeOptions, DeployTypeOptions, LanguageOptions } from "@/app/lib/utils";
 
+import Multiselect from 'multiselect-react-dropdown';
+import { useHostList } from "@/app/hooks/useHostList";
+import { useUserList } from "@/app/hooks/useUserList";
+import { useProjectsDomain } from "@/app/hooks/useProjectsDomain"
 export default function Form() {
   const {
     register,
     handleSubmit,
+    watch,
+    control,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(ProjectApprovalZodSchema),
     defaultValues: {
       project_name: "",
+      type: "",
       git_repo: "",
-      is_proxy: 0,
+      is_proxy: "2",
       language: "",
       port: 8080,
       description: "",
-      owner: "",
+      domain: "",
+      owner_id: "",
       business: "",
-      status: "active",
+      status: "disable",
+      deploy_type: "1",
       approver: "",
       assigner: "",
+      host_ids: "",
+      backend_id: ""
     },
   });
   const router = useRouter();
   const { data: session } = useSession();
   const { createApproval } = useApprovals(); // 使用 useProjects 钩子获取 createProject 函数
   const { createProject } = useProjects(); // 使用 useProjects 钩子获取 createProject 函数
+  const { hosts, isLoading: hostsLoading } = useHostList()
+  const { users, isLoading: usersLoading } = useUserList()
+  const {
+    project,
+    isLoading: projectLoading,
+    mutate,
+  } = useProjectsDomain("/api/project/domain/list");
+
+  // console.log("host list ---->", hosts)
+
+  // const options = [
+  //   { value: 'chocolate', label: 'Chocolate' },
+  //   { value: 'strawberry', label: 'Strawberry' },
+  //   { value: 'vanilla', label: 'Vanilla' }
+  // ]
+
+
+  // console.log(watch('is_proxy'));
+  // console.log(watch('deploy_type'));
+
+  const onInvalid = (errors) => console.error(errors)
+
+
+  const onError = (errors, e) => {
+    // Handle errors, e.g., log them or display messages
+    console.log("------>    errors", errors);
+    console.log("------>    e", e);
+
+  };
+
 
   const onSubmit = async (data) => {
+    console.log("why nothing work", watch("host_ids"))
     console.log("------>", data);
     // const transformedData = {
     //   ...data,
@@ -65,14 +110,20 @@ export default function Form() {
 
     const projectData = {
       project_name: data.project_name,
-      git_repo: data.git_repo,
+      type: data.type,
+      git_repo: data.git_repo ? data.git_repo : "",
       is_proxy: data.is_proxy,
+      domain: data.domain ? data.domain : "",
       language: data.language,
       port: data.port,
+      owner_id: data.owner_id,
       business: data.business,
       description: data.description,
+      deploy_type: data.deploy_type,
       create_user_id: session.user.id,
       status: data.status,
+      backend_id: data.backend_id,
+      host_ids: watch("host_ids") ? watch("host_ids") : [],
     };
     try {
       // 从第一步的响应中获取必要的数据
@@ -94,6 +145,8 @@ export default function Form() {
 
         await createApproval(approvalData);
         toast.success("Project created successfully!");
+        // 通知/dashboard/project/tree有更新，重新获取最新的数据
+        mutate("/dashboard/project/tree")
         setTimeout(() => {
           router.push("/dashboard/approval/base"); // 使用 Router.push 进行跳转
         }, 2000); // 在显示成功消息 2 秒后跳转
@@ -107,7 +160,7 @@ export default function Form() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit, onError, onInvalid)}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         <div className="mb-4">
           <label
@@ -138,31 +191,79 @@ export default function Form() {
           ) : null}
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="git_repo" className="mb-2 block text-sm font-medium">
-            代码仓库地址
-          </label>
-          <div className="relative">
-            <input
-              id="git_repo"
-              {...register("git_repo")}
-              placeholder="Enter Git Repo Address"
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              aria-describedby="type-error"
-            />
-            <FcClock className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-          </div>
+        <div className="-mx-3 flex flex-wrap ">
+          <div className="w-full px-3 sm:w-1/2 ">
+            <div className="mb-4">
+              <label
+                htmlFor="type"
+                className="mb-2 block text-sm font-medium"
+              >
+                项目类型
+              </label>
+              <div className="relative">
+                <select
+                  id="type"
+                  {...register("type")}
+                  className="w-full rounded-md border border-[#e0e0e0] bg-white py-2 px-6 pl-10 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                >
+                  <option value="" disabled>
+                    Select Project Type
+                  </option>
 
-          {errors?.git_repo?.message ? (
-            <div
-              id="customer-error"
-              aria-live="polite"
-              className="mt-2 text-sm text-red-500"
-            >
-              {errors.git_repo.message}
+
+                  {TypeOptions.map((type) => (
+                    <option key={type.value} value={type.value.toString()}>
+                      {type.label}
+                    </option>
+                  ))}
+                </select>
+                <FcViewDetails className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              </div>
+
+              {errors?.type?.message ? (
+                <div
+                  id="customer-error"
+                  aria-live="polite"
+                  className="mt-2 text-sm text-red-500"
+                >
+                  {errors.type.message}
+                </div>
+              ) : null}
             </div>
-          ) : null}
+          </div>
         </div>
+
+
+
+        {/* 如果需要域名的话，需要输入代码仓库地址 */}
+        {(watch("type") != "2" && watch("type") != "6") ? (
+          <div className="mb-4">
+            <label htmlFor="git_repo" className="mb-2 block text-sm font-medium">
+              代码仓库地址
+            </label>
+            <div className="relative">
+              <input
+                id="git_repo"
+                {...register("git_repo")}
+                placeholder="Enter Git Repo Address"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                aria-describedby="type-error"
+              />
+              <FcClock className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+
+            {errors?.git_repo?.message ? (
+              <div
+                id="customer-error"
+                aria-live="polite"
+                className="mt-2 text-sm text-red-500"
+              >
+                {errors.git_repo.message}
+              </div>
+            ) : null}
+          </div>
+        ) : ""}
+
 
         <div className="-mx-3 flex flex-wrap ">
           {/* Task Type */}
@@ -183,21 +284,11 @@ export default function Form() {
                   <option value="" disabled>
                     Select Project Language
                   </option>
-                  <option key="vue" value="vue">
-                    vue
-                  </option>
-                  <option key="java" value="java">
-                    java
-                  </option>
-                  <option key="go" value="go">
-                    go
-                  </option>
-                  <option key="python" value="python">
-                    python
-                  </option>
-                  <option key="rust" value="rust">
-                    rust
-                  </option>
+                  {LanguageOptions.map((language) => (
+                    <option key={language.value} value={language.value}>
+                      {language.label}
+                    </option>
+                  ))}
                 </select>
                 <FcViewDetails className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               </div>
@@ -214,132 +305,8 @@ export default function Form() {
             </div>
           </div>
 
-          <div className="w-full px-3 sm:w-1/2">
-            {/* Task is_proxy */}
-            <fieldset className="mb-4">
-              <legend className="mb-2 block text-sm font-medium">
-                是否需要域名
-              </legend>
-              <div className="w-full rounded-md border border-[#e0e0e0] bg-white py-2 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
-                <div className="flex gap-4">
-                  <div className="flex items-center">
-                    <input
-                      {...register("is_proxy")}
-                      type="radio"
-                      id="proxy_disable"
-                      value="0" // 0 代表 disable
-                      aria-describedby="is_proxy-error"
-                    />
-                    <label
-                      htmlFor="proxy_disable"
-                      className="ml-2 flex items-center"
-                    >
-                      否
-                    </label>
-                  </div>
-                  <div className="flex items-center">
-                    <input
-                      {...register("is_proxy")}
-                      type="radio"
-                      id="proxy_active"
-                      value="1" // 1 代表 active
-                    />
-                    <label
-                      htmlFor="proxy_active"
-                      className="ml-2 flex items-center "
-                    >
-                      是
-                    </label>
-                  </div>
-                </div>
-              </div>
-              {errors?.is_proxy?.message ? (
-                <div
-                  id="is_proxy-error"
-                  aria-live="polite"
-                  className="mt-2 text-sm text-red-500"
-                >
-                  {errors.is_proxy.message}
-                </div>
-              ) : null}
-            </fieldset>
-          </div>
-        </div>
 
-        <div className="-mx-3 flex flex-wrap ">
-          <div className="w-full px-3 sm:w-1/2">
-            <div className="mb-4">
-              <label htmlFor="port" className="mb-2 block text-sm font-medium">
-                项目端口
-              </label>
-              <div className="relative">
-                <input
-                  id="port"
-                  type="number"
-                  {...register("port", {
-                    setValueAs: (value) =>
-                      value === "" ? null : parseInt(value, 10),
-                  })}
-                  className="w-full rounded-md border border-[#e0e0e0] bg-white pl-10 py-2 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                  aria-describedby="type-error"
-                />
-                <FcClock className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-              </div>
 
-              {errors?.port?.message ? (
-                <div
-                  id="customer-error"
-                  aria-live="polite"
-                  className="mt-2 text-sm text-red-500"
-                >
-                  {errors.port.message}
-                </div>
-              ) : null}
-            </div>
-          </div>
-
-          {/* Project Owner */}
-          <div className="w-full px-3 sm:w-1/2">
-            <div className="mb-4">
-              <label htmlFor="owner" className="mb-2 block text-sm font-medium">
-                项目负责人
-              </label>
-              <div className="relative">
-                <select
-                  id="owner"
-                  {...register("owner")}
-                  className="w-full rounded-md border border-[#e0e0e0] bg-white pl-10 py-2 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                >
-                  <option value="" disabled>
-                    Select Project owner
-                  </option>
-                  <option key="zhuima" value="zhuima">
-                    zhuima
-                  </option>
-                  <option key="Nick" value="Nick">
-                    Nick
-                  </option>
-                  <option key="Tony" value="Tony">
-                    Tony
-                  </option>
-                </select>
-                <FcViewDetails className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-              </div>
-
-              {errors?.owner?.message ? (
-                <div
-                  id="customer-error"
-                  aria-live="polite"
-                  className="mt-2 text-sm text-red-500"
-                >
-                  {errors.owner.message}
-                </div>
-              ) : null}
-            </div>
-          </div>
-        </div>
-
-        <div className="-mx-3 flex flex-wrap mt-5">
           <div className="w-full px-3 sm:w-1/2">
             <div className="mb-4">
               <label
@@ -378,10 +345,341 @@ export default function Form() {
               ) : null}
             </div>
           </div>
+
         </div>
 
+        <div className="-mx-3 flex flex-wrap ">
+          <div className="w-full px-3 sm:w-1/2">
+            <div className="mb-4">
+              <label htmlFor="port" className="mb-2 block text-sm font-medium">
+                项目端口
+              </label>
+              <div className="relative">
+                <input
+                  id="port"
+                  type="number"
+                  {...register("port", {
+                    setValueAs: (value) =>
+                      value === "" ? null : parseInt(value, 10),
+                  })}
+                  className="w-full rounded-md border border-[#e0e0e0] bg-white pl-10 py-2 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                  aria-describedby="type-error"
+                />
+                <FcClock className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+              </div>
+
+              {errors?.port?.message ? (
+                <div
+                  id="customer-error"
+                  aria-live="polite"
+                  className="mt-2 text-sm text-red-500"
+                >
+                  {errors.port.message}
+                </div>
+              ) : null}
+            </div>
+          </div>
+
+          {/* Project Owner */}
+          <div className="w-full px-3 sm:w-1/2">
+            <div className="mb-4">
+              <label htmlFor="owner_id" className="mb-2 block text-sm font-medium">
+                项目负责人
+              </label>
+              <div className="relative">
+                <select
+                  id="owner_id"
+                  {...register("owner_id")}
+                  className="w-full rounded-md border border-[#e0e0e0] bg-white pl-10 py-2 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                >
+                  <option value="" disabled>
+                    Select Project owner
+                  </option>
+
+
+                  {users.map((user) => (
+                    <option key={user.username} value={user.id.toString()}>
+                      {user.username}
+                    </option>
+                  ))}
+
+
+                </select>
+                <FcViewDetails className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              </div>
+
+              {errors?.owner_id?.message ? (
+                <div
+                  id="customer-error"
+                  aria-live="polite"
+                  className="mt-2 text-sm text-red-500"
+                >
+                  {errors.owner_id.message}
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+
+
+        <div className="-mx-3 flex flex-wrap">
+          <div className="w-full px-3 sm:w-1/2">
+            {/* Task is_proxy */}
+            <fieldset className="mb-4">
+              <legend className="mb-2 block text-sm font-medium">
+                是否需要域名
+              </legend>
+              <div className="w-full rounded-md border border-[#e0e0e0] bg-white py-2 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
+                <div className="flex gap-4">
+                  <div className="flex items-center">
+                    <input
+                      {...register("is_proxy")}
+                      type="radio"
+                      id="proxy_disable"
+                      value="1" // 1 代表 active
+                      checked={watch("is_proxy") === "1"}
+                      aria-describedby="is_proxy-error"
+                    />
+                    <label
+                      htmlFor="proxy_disable"
+                      className="ml-2 flex items-center"
+                    >
+                      是
+                    </label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      {...register("is_proxy")}
+                      type="radio"
+                      id="proxy_active"
+                      value="2" // 2 代表 disable 
+                      checked={watch("is_proxy") === "2"}
+                    />
+                    <label
+                      htmlFor="proxy_active"
+                      className="ml-2 flex items-center "
+                    >
+                      否
+                    </label>
+                  </div>
+                </div>
+              </div>
+              {errors?.is_proxy?.message ? (
+                <div
+                  id="is_proxy-error"
+                  aria-live="polite"
+                  className="mt-2 text-sm text-red-500"
+                >
+                  {errors.is_proxy.message}
+                </div>
+              ) : null}
+            </fieldset>
+          </div>
+        </div>
+
+
+        {/* 如果需要域名的话，需要输入域名地址 */}
+        {watch("is_proxy") === "1" ? (
+          <div className="-mx-3 flex flex-wrap">
+            <div className="w-full px-3 sm:w-1/2">
+              {/* Task is_proxy */}
+              <fieldset className="mb-4">
+                <legend className="mb-2 block text-sm font-medium">
+                  请输入域名
+                </legend>
+                <div className="relative">
+                  <input
+                    id="domain"
+                    {...register("domain")}
+                    placeholder="Enter Project Domain"
+                    className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                    aria-describedby="type-error"
+                  />
+                  <FcClock className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+                </div>
+                {errors?.domain?.message ? (
+                  <div
+                    id="domain-error"
+                    aria-live="polite"
+                    className="mt-2 text-sm text-red-500"
+                  >
+                    {errors.domain.message}
+                  </div>
+                ) : null}
+              </fieldset>
+            </div>
+
+            <div className="w-full px-3 sm:w-1/2 ">
+              <div className="mb-4">
+                <label
+                  htmlFor="backend_id"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  关联后端项目
+                </label>
+                <div className="relative">
+                  <select
+                    id="backend_id"
+                    {...register("backend_id")}
+                    className="w-full rounded-md border border-[#e0e0e0] bg-white py-2 px-6 pl-10 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                  >
+                    <option value="" disabled>
+                      Select Backend Domain
+                    </option>
+                    {project.map((project) => (
+                      <option key={project.id} value={project.id}>
+                        {project.domain}
+                      </option>
+                    ))}
+                  </select>
+                  <FcViewDetails className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                </div>
+
+                {errors?.backend_id?.message ? (
+                  <div
+                    id="customer-error"
+                    aria-live="polite"
+                    className="mt-2 text-sm text-red-500"
+                  >
+                    {errors.backend_id.message}
+                  </div>
+                ) : null}
+              </div>
+            </div>
+
+          </div>
+        ) : ""}
+
+
+        {/* Deploy Type */}
+        <div className="-mx-3 flex flex-wrap">
+          <div className="w-full px-3 sm:w-1/2">
+            {/* Task is_proxy */}
+            <fieldset className="mb-4">
+              <legend className="mb-2 block text-sm font-medium">
+                部署方式
+              </legend>
+              <div className="w-full rounded-md border border-[#e0e0e0] bg-white py-2 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md">
+                <div className="flex gap-4">
+                  <div className="flex items-center">
+                    <input
+                      {...register("deploy_type")}
+                      type="radio"
+                      id="deploy_type_k8s"
+                      value="1" // 0 代表 k8s
+                      checked={watch("deploy_type") === "1"}
+                      aria-describedby="deploy_type-error"
+                    />
+                    <label
+                      htmlFor="deploy_type_k8s"
+                      className="ml-2 flex items-center"
+                    >
+                      k8s
+                    </label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      {...register("deploy_type")}
+                      type="radio"
+                      id="deploy_type_active"
+                      value='2' // 1 代表 ecs
+                      checked={watch("deploy_type") === "2"}
+
+                    />
+                    <label
+                      htmlFor="deploy_type_active"
+                      className="ml-2 flex items-center "
+                    >
+                      ecs
+                    </label>
+                  </div>
+                </div>
+              </div>
+              {errors?.deploy_type?.message ? (
+                <div
+                  id="deploy_type-error"
+                  aria-live="polite"
+                  className="mt-2 text-sm text-red-500"
+                >
+                  {errors.deploy_type.message}
+                </div>
+              ) : null}
+            </fieldset>
+          </div>
+
+        </div>
+
+
+        {/* 如果是ecs部署的话，需要选中对应的主机 */}
+        {watch("deploy_type") === "2" ? (
+          <div className="-mx-3 flex flex-wrap">
+            <div className="w-full px-3 sm:w-1/2">
+              {/* Task is_proxy */}
+              <fieldset className="mb-4">
+                <legend className="mb-2 block text-sm font-medium">
+                  请选择主机
+                </legend>
+                {/* <div className="relative">
+                  <input
+                    id="domain"
+                    {...register("domain")}
+                    placeholder="Enter Project Domain"
+                    className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                    aria-describedby="type-error"
+                  />
+                  <FcClock className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+                </div> */}
+                <Controller
+                  name="host_ids"
+                  control={control}
+                  rules={{ required: true }}
+                  className="peer block w-full rounded-md  py-2 pl-10 text-sm  placeholder:text-gray-500"
+                  render={({ field: { ref, ...field } }) => {
+                    console.log(" {console.log(field)}", field);
+                    return (
+                      <Multiselect
+                        {...field}
+                        inputRef={ref}
+                        displayValue="ip"
+                        loading={hostsLoading}
+                        selectedValues={hosts.selectedValue}
+                        onSelect={(selected, item) => {
+                          // 提取选中项的 ID
+                          const selectedIds = selected.map((s) => s.id);
+                          setValue("host_ids", selectedIds);
+                        }}
+                        onRemove={(selected, item) => {
+                          // 提取选中项的 ID
+                          const selectedIds = selected.map((s) => s.id);
+                          setValue("host_ids", selectedIds);
+                        }}
+                        options={hosts}
+                      // options={[
+                      //   { value: "chocolate", name: "Chocolate", id: 1 },
+                      //   { value: "strawberry", name: "Strawberry", id: 2 },
+                      //   { value: "vanilla", name: "Vanilla", id: 3 }
+                      // ]}
+                      />
+                    );
+                  }}
+                />
+                {errors?.host_ids?.message ? (
+                  <div
+                    id="host_ids-error"
+                    aria-live="polite"
+                    className="mt-2 text-sm text-red-500"
+                  >
+                    {errors.host_ids.message}
+                  </div>
+                ) : null}
+              </fieldset>
+            </div>
+          </div>
+        ) : ""}
+
+
         {/* Task Description */}
-        <div className="mt-4 mb-4">
+        <div className="mb-4">
           <label
             htmlFor="description"
             className="mb-2 block text-sm font-medium"
@@ -459,7 +757,7 @@ export default function Form() {
           ) : null}
         </fieldset>
 
-        <div className="-mx-3 flex flex-wrap mt-5">
+        <div className="-mx-3 flex flex-wrap mt-4">
           <div className="w-full px-3 sm:w-1/2">
             <div className="mb-4">
               <label
@@ -477,15 +775,14 @@ export default function Form() {
                   <option value="" disabled>
                     Select Project approver
                   </option>
-                  <option key="zhuima" value="zhuima">
-                    zhuima
-                  </option>
-                  <option key="Nick" value="Nick">
-                    Nick
-                  </option>
-                  <option key="Tony" value="Tony">
-                    Tony
-                  </option>
+
+                  {users.map((user) => (
+                    <option key={user.username} value={user.username}>
+                      {user.username}
+                    </option>
+                  ))}
+
+
                 </select>
                 <FcClock className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
               </div>
@@ -520,15 +817,14 @@ export default function Form() {
                   <option value="" disabled>
                     Select Project assigner
                   </option>
-                  <option key="zhuima" value="zhuima">
-                    zhuima
-                  </option>
-                  <option key="Nick" value="Nick">
-                    Nick
-                  </option>
-                  <option key="Tony" value="Tony">
-                    Tony
-                  </option>
+
+                  {users.map((user) => (
+                    <option key={user.username} value={user.username}>
+                      {user.username}
+                    </option>
+                  ))}
+
+
                 </select>
                 <FcViewDetails className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               </div>
@@ -547,10 +843,15 @@ export default function Form() {
         </div>
       </div>
 
-      <div className="mt-6 flex justify-end gap-4">
+
+
+
+
+      <div className="mt-4 flex justify-end gap-4">
         <Link
           href="/dashboard/approval/base"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+          prefetch
         >
           取消
         </Link>

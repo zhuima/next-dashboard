@@ -85,6 +85,9 @@ export default function WorkflowTable({ approvals, page, mutate }) {
                   Title
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
+                  申请人
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
                   审批人
                 </th>
 
@@ -108,41 +111,48 @@ export default function WorkflowTable({ approvals, page, mutate }) {
                   key={approval.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg hover:bg-gray-100"
                 >
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                  <td className="whitespace-normal py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
                       <p>{approval.id}</p>
                     </div>
                   </td>
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                  <td className="whitespace-normal py-3 pl-6 pr-3">
                     <p>{approval.title}</p>
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
+                  <td className="whitespace-normal px-3 py-3">
+                    {approval.user.username}
+                  </td>
+                  <td className="whitespace-normal px-3 py-3">
                     {approval.approver}
                   </td>
-                  {/* <td className="whitespace-nowrap px-3 py-3">
+                  {/* <td className="whitespace-normal px-3 py-3">
                     {approval.language}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
+                  <td className="whitespace-normal px-3 py-3">
                     {approval.description}
                   </td> */}
 
-                  <td className="whitespace-nowrap px-3 py-3">
+                  <td className="whitespace-normal px-3 py-3">
                     <RenderStatusComponent
                       options={approvalStatusOptions}
                       currentValue={approval.status}
                       Component={ApprovalStatus}
                     />
                   </td>
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                  <td className="whitespace-normal py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <button onClick={handleApprovalClick(approval.id)}>
+                      {/* <button onClick={handleApprovalClick(approval.id)}>
                         审批
-                      </button>
+                      </button> */}
+                      <Link href={`/dashboard/approval/${approval.id}/detail`} prefetch>
+                        审批详情
+                      </Link>
+
                       {/* <UpdateApproval id={approval.id} page={page} />
                       <DeleteApproval id={approval.id} mutate={mutate} /> */}
                     </div>
                   </td>
-                  {/* <td className="whitespace-nowrap p-6">
+                  {/* <td className="whitespace-normal p-6">
                     <Menu as="div" className="relative inline-block text-left">
                       {({ open }) => (
                         <>

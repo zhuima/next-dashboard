@@ -32,8 +32,8 @@ export default function Page({ params }) {
         breadcrumbs={[
           { label: "首页", Icon: AiFillHome, href: "/dashboard" },
           {
-            label: "工单待办",
-            href: "/dashboard/approval",
+            label: "审批列表",
+            href: "/dashboard/approval/base",
             active: false,
           },
           {

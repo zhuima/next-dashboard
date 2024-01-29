@@ -21,7 +21,7 @@ const authOptions = {
         username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.username || !credentials.password) {
           throw new Error("Invalid credentials");
         }
@@ -65,7 +65,7 @@ const authOptions = {
 
         console.log(
           "request api interface response ++++++++++++++++++",
-          response
+          response.status
         );
         if (!response) throw new Error(response.message);
 
@@ -80,6 +80,11 @@ const authOptions = {
   ],
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 设置最大会话时长（秒）
+    updateAge: 24 * 60 * 60, // 设置更新会话时长（秒）
+    // maxAge: 3 * 2 * 2 * 10, // 设置最大会话时长（秒）
+    // updateAge: 3 * 2 * 2 * 10, // 设置更新会话时长（秒）
+    cache: true, // 启用缓存
   },
   pages: {
     signIn: "/login",
@@ -100,7 +105,7 @@ const authOptions = {
 
         return {
           ...token,
-          id: user.ID,
+          id: user.id,
           role: user.role_id,
           username: user.username,
           accessToken: user.token,

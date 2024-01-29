@@ -9,7 +9,8 @@
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
  */
 const Content = ({ children }) => {
-  return <div className="flex-grow p-4 overflow-auto">{children}</div>;
+  // return <div className="flex-grow p-4 overflow-auto">{children}</div>;
+  return <div className="flex flex-col flex-grow p-4 overflow-y-auto">{children}</div>;
 };
 
 export default Content;

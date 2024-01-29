@@ -1,0 +1,129 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import {
+  AiOutlineDown,
+  AiOutlineUp,
+  AiFillHome,
+  AiOutlineSchedule,
+  AiOutlineFieldTime,
+  AiOutlineTable,
+  AiOutlineMenuFold,
+  AiOutlineMenuUnfold
+} from "react-icons/ai";
+import { LiaStampSolid } from "react-icons/lia";
+
+import CMDBLogo from "@/app/ui/cmdb-logo";
+
+import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
+// import "react-pro-sidebar/dist/css/styles.css";
+
+
+// const Item = ({ title, to, icon, selected, setSelected }) => {
+//   return (
+//     <MenuItem
+//       active={selected === title}
+//       onClick={() => setSelected(title)}
+//       icon={icon}
+//     >
+//       <h3>{title}</h3>
+//       <Link href={to} prefetch />
+//     </MenuItem>
+//   );
+// };
+
+
+const Navbar = () => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [selected, setSelected] = useState("Dashboard");
+
+  return (
+    <div style={{ display: "flex", height: "100vh" }}>
+      <Sidebar collapsed={isCollapsed}>
+        <Menu iconShape="square">
+          {/* LOGO AND MENU ICON */}
+          <MenuItem
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            icon={isCollapsed ? <AiOutlineMenuFold /> : undefined}
+            className="my-2" // Tailwind CSS 类替换内联样式
+          >
+            {!isCollapsed && (
+              <div className="flex justify-between items-center ml-4"> {/* Tailwind CSS 类，替换 Box */}
+                <div className="text-3xl text-gray-100"> {/* Tailwind CSS 类，替换 Typography */}
+                  {/* <Image
+                    src="/next.svg"
+                    alt="Logo"
+                    className="w-24 h-auto filter invert"
+                    width="24"
+                    height="60"
+                  /> */}
+                  DevOps
+                </div>
+                <div onClick={() => setIsCollapsed(!isCollapsed)}> {/* 替换 IconButton */}
+                  {isCollapsed ? <AiOutlineMenuFold /> : <AiOutlineMenuUnfold />}
+                </div>
+              </div>
+            )}
+          </MenuItem>
+
+
+          {!isCollapsed && (
+            <div className="mt-4 mb-6"> {/* Tailwind CSS 类替换 Box 的 mb="25px" */}
+              <div className="text-center"> {/* Tailwind CSS 类替换 Box 的 textAlign="center" */}
+                <div className="text-2xl text-gray-100 font-bold mt-2.5"> {/* Tailwind CSS 类替换 Typography 的样式 */}
+                  Admin name
+                </div>
+                <div className="text-lg text-green-500"> {/* Tailwind CSS 类替换 Typography 的样式 */}
+                  Welcome
+                </div>
+              </div>
+            </div>
+          )}
+
+
+          <div className={`${!isCollapsed ? 'pl-4' : ''}`}>
+            <div className="text-sm text-gray-300 my-4 ml-5">
+              Data
+            </div>
+
+            <MenuItem
+              icon={
+                < AiFillHome />
+              }
+            >
+
+              <Link href="/dashboard" prefetch >首页</Link>
+            </MenuItem>
+            <SubMenu title="项目信息" label="Settings" icon={<LiaStampSolid />}>
+              <MenuItem icon={<LiaStampSolid />} > <h3>业务树</h3><Link href="/dashboard/project/tree" prefetch /> </MenuItem>
+            </SubMenu>
+
+            <SubMenu title="审批管理" label="Approval" icon={<LiaStampSolid />}>
+              <MenuItem icon={<AiOutlineSchedule />}> <h3>发起审批</h3><Link href="/dashboard/approval/new" prefetch /> </MenuItem>
+              <MenuItem icon={<AiOutlineSchedule />}> <h3>我发起的</h3><Link href="/dashboard/approval/my" prefetch /> </MenuItem>
+              <MenuItem icon={<AiOutlineSchedule />}>
+                <h3>我审批的</h3><Link href="/dashboard/approval/assign-me" prefetch />
+              </MenuItem>
+              <MenuItem icon={<AiOutlineSchedule />}>
+                <h3>所有审批</h3><Link href="/dashboard/approval/base" prefetch />
+              </MenuItem>
+            </SubMenu>
+
+            <SubMenu title="设置" label="Settings" icon={<LiaStampSolid />}>
+              <MenuItem icon={<LiaStampSolid />}> Account </MenuItem>
+              <MenuItem icon={<LiaStampSolid />}> Privacy </MenuItem>
+              <MenuItem icon={<LiaStampSolid />}>
+                Notifications
+              </MenuItem>
+            </SubMenu>
+          </div>
+        </Menu>
+      </Sidebar>
+    </div >
+  );
+};
+
+export default Navbar;

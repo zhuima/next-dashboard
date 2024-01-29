@@ -11,13 +11,9 @@ import {
   AiFillEdit,
   AiOutlineClose,
 } from "react-icons/ai";
-
-// 定义表单的验证架构
-const formSchema = z.object({
-  eventName: z.string().min(1, "事件名称是必填项"),
-  eventUser: z.string().min(1, "用户是必填项"),
-  eventColor: z.string().min(1, "颜色是必填项"),
-});
+import { DutySchema } from "@/schema";
+import { useUserList } from "@/app/hooks/useUserList";
+import { ColorOptions } from "@/app/lib/utils";
 
 export default function EventEditModal({
   isOpen,
@@ -25,6 +21,7 @@ export default function EventEditModal({
   onEditEvent,
   eventData,
 }) {
+  const { users, isLoading: usersLoading } = useUserList()
   // 初始化 useForm
   const {
     register,
@@ -33,14 +30,31 @@ export default function EventEditModal({
     formState: { errors, isSubmitted },
     trigger,
   } = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(DutySchema),
+    // defaultValues: {
+    //   eventName: eventData?.title,
+    //   eventUser: eventData?.dutyuid,
+    //   eventColor: eventData?.backgroundColor,
+    // },
   });
+
+  const onInvalid = (errors) => console.error(errors)
+
+
+  const onError = (errors, e) => {
+    // Handle errors, e.g., log them or display messages
+    console.log("------>    errors", errors);
+    console.log("------>    e", e);
+
+  };
+
 
   // 当 eventData 改变时，更新表单的默认值
   useEffect(() => {
     if (isOpen && eventData) {
+      // console.log("------>    eventData", eventData.extendedProps.user.username);
       setValue("eventName", eventData.title);
-      setValue("eventUser", eventData.user);
+      setValue("eventUser", eventData.extendedProps.dutyuid);
       setValue("eventColor", eventData.backgroundColor);
       // Only trigger validation if the form has been interacted with
       if (isSubmitted) {
@@ -50,7 +64,7 @@ export default function EventEditModal({
   }, [isOpen, eventData, setValue, trigger, isSubmitted]);
 
   // 提交表单
-  const onSubmit = (data) => {
+  const handleEventEdit = (data) => {
     if (eventData) {
       // // 附加额外的字段
       // data.id = Number(eventData.id); // 将 id 转换为数字
@@ -105,7 +119,7 @@ export default function EventEditModal({
             leaveTo="opacity-0 scale-95"
           >
             <form
-              onSubmit={handleSubmit(onSubmit)}
+              onSubmit={handleSubmit(handleEventEdit, onError, onInvalid)}
               className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
             >
               <div className="flex justify-between items-center mb-2">
@@ -135,15 +149,13 @@ export default function EventEditModal({
                   <option value="" disabled>
                     Select a user
                   </option>
-                  <option key="zhuima" value="zhuima">
-                    zhuima
-                  </option>
-                  <option key="tony" value="tony">
-                    tony
-                  </option>
-                  <option key="nick" value="nick">
-                    nick
-                  </option>
+
+                  {users.map((user) => (
+                    <option key={user.username} value={user.id.toString()}>
+                      {user.username}
+                    </option>
+                  ))}
+
                 </select>
                 {errors?.eventUser?.message ? (
                   <div
@@ -190,15 +202,13 @@ export default function EventEditModal({
                   <option value="" disabled>
                     Select a color
                   </option>
-                  <option key="red" value="red">
-                    red
-                  </option>
-                  <option key="blue" value="blue">
-                    blue
-                  </option>
-                  <option key="green" value="green">
-                    green
-                  </option>
+
+                  {ColorOptions.map((color) => (
+                    <option key={color.label} value={color.value}>
+                      {color.label}
+                    </option>
+                  ))}
+
                 </select>
                 {errors?.eventColor?.message ? (
                   <div

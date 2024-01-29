@@ -41,14 +41,14 @@ export default function Page() {
 
   console.log("log----> after", page, approvals);
   return (
-    <main>
+    <main >
       <Breadcrumbs
         breadcrumbs={[
           { label: "首页", Icon: AiFillHome, href: "/dashboard" },
 
           {
-            label: "审批管理",
-            href: "/dashboard/approval",
+            label: "审批列表",
+            href: "/dashboard/approval/base",
             active: false,
           },
           {

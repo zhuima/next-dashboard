@@ -13,8 +13,8 @@ import Link from "next/link";
 
 export default function Breadcrumbs({ breadcrumbs }) {
   return (
-    <nav aria-label="Breadcrumb" className="mb-6 block">
-      <ol className={clsx("flex text-xl md:text-2xl")}>
+    <nav aria-label="Breadcrumb" className="mb-3 block">
+      <ol className={clsx("flex text-middle md:text-lg")}>
         {breadcrumbs.map((breadcrumb, index) => {
           const Icon = breadcrumb.Icon; // Dynamically get the icon component
 
@@ -31,7 +31,7 @@ export default function Breadcrumbs({ breadcrumbs }) {
               {Icon && <Icon className="h-5 w-5 mr-2" />}{" "}
               {/* Render the icon */}
               {index < breadcrumbs.length - 1 ? (
-                <Link href={breadcrumb.href} className="hover:text-blue-600">
+                <Link href={breadcrumb.href} className="hover:text-blue-600" prefetch>
                   {breadcrumb.label}
                 </Link>
               ) : (

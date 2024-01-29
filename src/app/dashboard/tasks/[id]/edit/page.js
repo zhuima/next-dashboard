@@ -11,6 +11,8 @@
 "use client";
 import { Suspense } from "react";
 import Form from "@/app/ui/tasks/edit-form";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { useTask } from "@/app/hooks/useTask";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import { notFound } from "next/navigation";
@@ -45,7 +47,7 @@ export default function Page({ params }) {
         ]}
       />
       <Suspense fallback={<TasksTableSkeleton />}>
-        {isLoading ? <div>Loading...</div> : <Form task={task} />}
+        {isLoading ? <div className="peer flex-1  p-2"><Skeleton count={5} /></div> : <Form task={task} />}
       </Suspense>
     </main>
   );

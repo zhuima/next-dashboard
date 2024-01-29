@@ -27,25 +27,29 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { Button } from "@/app/ui/button";
 import { ProjectZodSchema } from "@/schema";
+import { DeployTypeOptions } from "@/app/lib/utils";
+
 
 export default function Form() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(ProjectZodSchema),
     defaultValues: {
       project_name: "",
       git_repo: "",
-      is_proxy: 0,
+      is_proxy: '0',
       language: "",
       port: 8080,
       description: "",
-      owner: "",
+      owner_id: "",
       status: "active",
       approver: "",
       assigner: "",
+      deploy_type: 1,
     },
   });
   const router = useRouter();
@@ -192,6 +196,7 @@ export default function Form() {
                       type="radio"
                       id="proxy_disable"
                       value="0" // 0 代表 disable
+                      checked={watch('is_proxy') === '0'}
                       aria-describedby="is_proxy-error"
                     />
                     <label
@@ -207,6 +212,8 @@ export default function Form() {
                       type="radio"
                       id="proxy_active"
                       value="1" // 1 代表 active
+                      checked={watch('is_proxy') === '1'}
+
                     />
                     <label
                       htmlFor="proxy_active"
@@ -262,41 +269,41 @@ export default function Form() {
             </div>
           </div>
 
-          {/* Project Owner */}
+          {/* Project owner_id */}
           <div className="w-full px-3 sm:w-1/2">
             <div className="mb-4">
-              <label htmlFor="owner" className="mb-2 block text-sm font-medium">
+              <label htmlFor="owner_id" className="mb-2 block text-sm font-medium">
                 项目负责人
               </label>
               <div className="relative">
                 <select
-                  id="owner"
-                  {...register("owner")}
+                  id="owner_id"
+                  {...register("owner_id")}
                   className="w-full rounded-md border border-[#e0e0e0] bg-white pl-10 py-2 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                 >
                   <option value="" disabled>
-                    Select Project owner
+                    Select Project owner_id
                   </option>
-                  <option key="zhuima" value="zhuima">
+                  <option key="zhuima" value="1">
                     zhuima
                   </option>
-                  <option key="Nick" value="Nick">
+                  <option key="Nick" value="2">
                     Nick
                   </option>
-                  <option key="Tony" value="Tony">
+                  <option key="Tony" value="3">
                     Tony
                   </option>
                 </select>
                 <FcViewDetails className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               </div>
 
-              {errors?.owner?.message ? (
+              {errors?.owner_id?.message ? (
                 <div
                   id="customer-error"
                   aria-live="polite"
                   className="mt-2 text-sm text-red-500"
                 >
-                  {errors.owner.message}
+                  {errors.owner_id.message}
                 </div>
               ) : null}
             </div>
@@ -424,7 +431,7 @@ export default function Form() {
             </div>
           </div>
 
-          {/* Project Owner */}
+          {/* Project owner_id */}
           <div className="w-full px-3 sm:w-1/2">
             <div className="mb-4">
               <label
@@ -473,6 +480,7 @@ export default function Form() {
         <Link
           href="/dashboard/workflow"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+          prefetch
         >
           取消
         </Link>

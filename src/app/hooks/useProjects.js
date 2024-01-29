@@ -44,7 +44,10 @@ export function useProjects(url) {
   const { data, error, isLoading, mutate } = useSWR(
     url,
     // shouldFetch ? `/api/project?${queryParams}` : null,
-    fetcher
+    fetcher,
+    {
+      keepPreviousData: true
+    }
   );
 
   const projects = data?.projects || [];

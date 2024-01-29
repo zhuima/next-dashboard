@@ -9,6 +9,7 @@
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
  */
 "use client";
+import { useCallback } from "react"
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { AiOutlineSearch, AiOutlineClose } from "react-icons/ai";
 import { useSWRConfig } from "swr";
@@ -18,10 +19,10 @@ import { useDebouncedCallback } from "use-debounce";
 export default function Search({ placeholder }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const { push, replace } = useRouter();
   const { mutate } = useSWRConfig();
 
-  const handleSearch = useDebouncedCallback((term) => {
+  const handleSearch = useCallback(useDebouncedCallback((term) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", "1");
     if (term) {
@@ -29,10 +30,16 @@ export default function Search({ placeholder }) {
     } else {
       params.delete("query");
     }
-    replace(`${pathname}?${params.toString()}`, undefined, { shallow: true });
+    // replace(`${pathname}?${params.toString()}`, undefined, { shallow: true });
+    replace(`${pathname}?${params.toString()}`, undefined, { shallow: true });  // 使用router.push进行客户端导航
+
     // 使用 mutate 进行数据请求的节流或防抖
     // mutate(`${pathname}?${params.toString()}`);
-  }, 500);
+  }, 800,
+    // The maximum time func is allowed to be delayed before it's invoked:
+    { maxWait: 2000 }),
+    [] // Dependency array - adjust as needed
+  );
 
   return (
     <div className="relative flex flex-1 flex-shrink-0">

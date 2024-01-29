@@ -16,8 +16,9 @@ export default function MainLayout({ children }) {
   };
   return (
     <div className="flex h-screen overflow-hidden bg-gray-100">
+      {/* <Navbar /> */}
       <Navbar isMenuOpen={isSidebarOpen} />
-      <div className="flex flex-col flex-grow">
+      <div className="flex flex-col flex-grow ">
         <UserBar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
         <Content>
           <ToastContainer />

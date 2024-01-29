@@ -13,15 +13,15 @@ import Image from "next/image";
 import CMDBLogo from "@/app/ui/cmdb-logo";
 
 export const metadata = {
-  title: "ZhuiMa CMDB 落地页",
-  description: "自动化运维平台落地页",
+  title: "ZhuiMa CMDB 平台",
+  description: "自动化运维平台",
 };
 
 export default function Page() {
   return (
-    <main className="flex min-h-screen flex-col p-6">
+    <main className="flex h-screen flex-col flex-grow p-6 overflow-hidden">
       <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
-        <Link href="/">
+        <Link href="/" prefetch>
           <CMDBLogo />
         </Link>
       </div>
@@ -30,14 +30,15 @@ export default function Page() {
           <div className="h-0 w-0 border-b-[30px] border-l-[20px] border-r-[20px] border-b-black border-l-transparent border-r-transparent" />
           <p className={`text-xl text-gray-800 md:text-3xl md:leading-normal`}>
             <strong>Welcome to DevOps CMDB.</strong> This is the website for the{" "}
-            <a href="https://nextjs.org/learn/" className="text-blue-500">
+            <Link href="http://localhost:3000/" className="text-blue-500" prefetch>
               ZhuiMa CMDB
-            </a>
-            , brought to you by Vercel.
+            </Link>
+            , brought to you by Zhuima.
           </p>
           <Link
             href="/login"
             className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
+            prefetch
           >
             <span>Log in</span>
           </Link>

@@ -21,6 +21,9 @@ export const metadata = {
   },
   description: "自动化运维平台",
   metadataBase: new URL("https://next-learn-dashboard.vercel.sh"),
+  icons: {
+    icon: '/favicon.ico', // /public path
+  },
 };
 
 export default function RootLayout({ children }) {

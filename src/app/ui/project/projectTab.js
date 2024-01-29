@@ -9,30 +9,52 @@
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
  */
 "use client";
+import { clsx } from "clsx";
 import React, { useState } from "react";
 import Link from "next/link";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import { useProjects } from "@/app/hooks/useProjects";
+import { useProjectWithName } from "@/app/hooks/useProjectWithName";
+import { useProject } from "@/app/hooks/useProject"
+import { useAudit } from "@/app/hooks/useAudit";
 import "react-tabs/style/react-tabs.css";
+
+
 import {
   approvalStatusOptions,
   applyOperateOptions,
   userOption,
   BusinessOptions,
   RenderStatusComponent,
+  RenderLink,
+  TypeOptions,
 } from "@/app/lib/utils";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer'
+import { UpdateWorkflow, DeleteWorkflow } from "@/app/ui/workflow/buttons";
+import { UpdateProject } from "./buttons";
+
+import { ProjectTabPanel } from "./projectTabPanel";
+import { AuditLogTabPanel } from "./auditLogTabPanel";
+import { NothingSelect } from "./nothingSelect"
+import { OrgChartTreeTabPanel } from "./d3treeTabPanel"
 
 const ProjectTab = ({ selectedItems }) => {
   const [tabIndex, setTabIndex] = useState(0);
 
-  const queryParams = new URLSearchParams({
-    query: selectedItems ?? "", // 假设API支持`q`作为搜索参数
-  }).toString();
+  // const queryParams = new URLSearchParams({
+  //   query: selectedItems ?? "", // 假设API支持`q`作为搜索参数
+  // }).toString();
 
-  const url = queryParams ? `/api/project?${queryParams}` : "/api/project";
+  const pname = selectedItems && selectedItems.length >= 1 ? selectedItems : "meishi-gateway";
   // console.log("Query Params:", queryParams);
 
-  const { projects, total, isLoading, mutate } = useProjects(url);
+  const { project, total, isLoading } = useProjectWithName(pname);
+  const { project: backendProject, isLoading: bisLoading } = useProject(project?.backend_id ?? null);
+  console.log(backendProject, "<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+  const { audits, isLoading: auditLoading } = useAudit(project?.id ?? null);
+
 
   return (
     <>
@@ -41,117 +63,57 @@ const ProjectTab = ({ selectedItems }) => {
           <Tabs
             selectedIndex={tabIndex}
             onSelect={(index) => setTabIndex(index)}
+            defaultIndex={1}
           >
-            <TabList>
-              <Tab>测试环境</Tab>
-              <Tab>预发环境</Tab>
-              <Tab>生产环境</Tab>
-              <Tab>变更记录</Tab>
+            <TabList className="flex items-center">
+              {/* <Tab>项目信息</Tab>
+              <Tab>变更记录</Tab> */}
+              {/* 添加 Edit 按钮 */}
+              {/* 左侧 Tabs */}
+              <Tab className={clsx("px-4 py-2 border-b-2 border-transparent border-blue-500 hover:border-blue-500 focus:outline-none", tabIndex === 0 ? "text-green-500" : "")}>
+                项目信息
+              </Tab>
+              <Tab className={clsx("px-4 py-2 border-b-2 border-transparent border-blue-500 hover:border-blue-500 focus:outline-none ", tabIndex === 1 ? "text-green-500" : "")}>
+                变更记录
+              </Tab>
+              {project.type == 1 && (
+                <Tab className={clsx("px-4 py-2 border-b-2 border-transparent border-blue-500 hover:border-blue-500 focus:outline-none ", tabIndex === 2 ? "text-green-500" : "")}>
+                  关系图
+                </Tab>
+              )}
+
+
+              {/* 右侧 Edit 按钮 */}
+              <div className="flex-grow"></div>
+
+              <UpdateProject
+                id={project?.id}
+                className="p-2 text-blue-500 hover:text-blue-700 focus:outline-none focus:border-blue-300 focus:ring focus:ring-blue-200 rounded-md"
+              />
+
             </TabList>
             <TabPanel>
-              <div className="flex justify-end mt-3 ">
-                <button
-                  className="middle none center mr-4 rounded-lg bg-blue-500 px-6 py-3 font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                  data-ripple-light="true"
-                >
-                  编辑
-                </button>
-              </div>
-              <div className=" border shadow overflow-hidden border-b border-gray-200 sm:rounded-lg mt-3">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    <tr>
-                      <th className="px-6 py-4 whitespace-nowrap text-start text-sm font-medium text-gray-500 bg-gray-100">
-                        项目名称
-                      </th>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {projects[0]?.project_name}
-                      </td>
-                      <th className="px-6 py-4 whitespace-nowrap text-start text-sm font-medium text-gray-500 bg-gray-100">
-                        项目负责人
-                      </th>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {projects[0]?.owner_id}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th className="px-6 py-4 whitespace-nowrap text-start  text-sm font-medium text-gray-500 bg-gray-100">
-                        项目代码仓库地址
-                      </th>
-                      <td
-                        colSpan="3"
-                        className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                      >
-                        <p>{projects[0]?.git_repo}</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th className="px-6 py-4 whitespace-nowrap text-start text-sm font-medium text-gray-500 bg-gray-100">
-                        所属业务线
-                      </th>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <RenderStatusComponent
-                          options={BusinessOptions}
-                          currentValue={projects[0]?.business}
-                        />
-                      </td>
-                      <th className="px-6 py-4 whitespace-nowrap text-start text-sm font-medium text-gray-500 bg-gray-100">
-                        项目语言类型
-                      </th>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {projects[0]?.language}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th className="px-6 py-4 whitespace-nowrap text-start text-sm font-medium text-gray-500 bg-gray-100">
-                        状态
-                      </th>
-                      <td
-                        colSpan="3"
-                        className="px-6 py-4 whitespace-nowrap text-sm text-green-500"
-                      >
-                        {projects[0]?.status}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th className="px-6 py-4 whitespace-nowrap text-start text-sm font-medium text-gray-500 bg-gray-100">
-                        项目对应端口
-                      </th>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {projects[0]?.port}
-                      </td>
-                      <th className="px-6 py-4 whitespace-nowrap text-start text-sm font-medium text-gray-500 bg-gray-100">
-                        项目域名
-                      </th>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <Link href={`${projects[0]?.domain}`} target="_blank">
-                          {projects[0]?.domain}{" "}
-                        </Link>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th className="px-6 py-4 whitespace-nowrap text-start  text-sm font-medium text-gray-500 bg-gray-100">
-                        项目描述
-                      </th>
-                      <td
-                        colSpan="3"
-                        className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                      >
-                        <p>{projects[0]?.description}</p>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+              <ProjectTabPanel project={project} />
             </TabPanel>
-            <TabPanel>Title 2 {selectedItems}</TabPanel>
-            <TabPanel>Title 3 {selectedItems}</TabPanel>
-            <TabPanel>Title 4 {selectedItems}</TabPanel>
+            <TabPanel className="mb-6">
+              {!auditLoading && audits?.length >= 1 ? (
+                <AuditLogTabPanel audits={audits} project={project} />
+              ) : (
+                <NothingSelect />
+              )}
+            </TabPanel>
+            {(project.type == 1 && !bisLoading) && (
+              <TabPanel>
+                <OrgChartTreeTabPanel project={project} backendProject={backendProject} />
+              </TabPanel>
+            )}
+
           </Tabs>
         </>
       ) : (
-        <div className="peer flex-1  p-2">Loading...</div>
-      )}
+        <div className="peer flex-1  p-2"><Skeleton count={10} /></div>
+      )
+      }
     </>
   );
 };

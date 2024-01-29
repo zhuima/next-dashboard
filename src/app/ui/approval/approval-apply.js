@@ -8,6 +8,7 @@
  *
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
  */
+import useSWR, { mutate } from "swr";
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
@@ -15,8 +16,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useProgress } from "@/app/hooks/useProgress";
 import { toast } from "react-toastify";
 import { ProgressSchema } from "@/schema";
+import { useUserList } from "@/app/hooks/useUserList";
 
-const ApplyForm = ({ operateOptions, userOption, approvalId, closeDrawer }) => {
+
+const ApplyForm = ({ operateOptions, userOption, approvalId }) => {
   const {
     register,
     handleSubmit,
@@ -27,6 +30,7 @@ const ApplyForm = ({ operateOptions, userOption, approvalId, closeDrawer }) => {
     resolver: zodResolver(ProgressSchema),
   });
 
+  const { users, isLoading: usersLoading } = useUserList()
   const { createProgress } = useProgress();
 
   // 过滤掉值为1的选项
@@ -46,11 +50,11 @@ const ApplyForm = ({ operateOptions, userOption, approvalId, closeDrawer }) => {
     try {
       // 从第一步的响应中获取必要的数据
       await createProgress(formattedData);
-      await closeDrawer();
-      toast.success("Progress created successfully!");
-      //   setTimeout(() => {
-      //     router.push("/dashboard/approval/base"); // 使用 Router.push 进行跳转
-      //   }, 2000); // 在显示成功消息 2 秒后跳转
+      toast.success("Progress created successfully!", { autoClose: 1000 });
+      mutate(`/dashboard/approval/${approvalId}/detail`);
+      // setTimeout(() => {
+      //   router.push("/dashboard/approval/base"); // 使用 Router.push 进行跳转
+      // }, 2000); // 在显示成功消息 2 秒后跳转
     } catch (error) {
       toast.error("Failed to create Progress");
       console.error("Failed to create Progress", error);
@@ -61,7 +65,7 @@ const ApplyForm = ({ operateOptions, userOption, approvalId, closeDrawer }) => {
   const selectedOperate = watch("operate");
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded shadow">
+    <div className="bg-white p-6 ">
       <form onSubmit={handleSubmit(onSubmit)}>
         <label
           htmlFor="operate"
@@ -96,11 +100,24 @@ const ApplyForm = ({ operateOptions, userOption, approvalId, closeDrawer }) => {
               {...register("next")}
               className="form-select block w-full border-gray-300 rounded"
             >
-              {userOption.map((option) => (
+              {/* {userOption.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
+              ))} */}
+
+              <option value="" disabled>
+                Select Approval User
+              </option>
+
+
+              {users.map((user) => (
+                <option key={user.username} value={user.username}>
+                  {user.username}
+                </option>
               ))}
+
+
             </select>
           </div>
         )}
@@ -122,7 +139,7 @@ const ApplyForm = ({ operateOptions, userOption, approvalId, closeDrawer }) => {
 
         <button
           type="submit"
-          className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
           提交
         </button>

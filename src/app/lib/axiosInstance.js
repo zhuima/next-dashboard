@@ -11,6 +11,8 @@
 // lib/axiosInstance.js
 import axios from "axios";
 import { getSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export const axiosPublic = axios.create({
   baseURL: process.env.NEXT_PUBLIC_APP_API_BASE_URL,
@@ -56,4 +58,73 @@ axiosInstance.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
+
+//  intercept the response
+
+// axiosInstance.interceptors.response.use(async (response) => {
+//   return response
+// }, async function (error) {
+
+//   const { status } = error?.response;
+//   if (status === 401) {
+//     console.log('Caught 401 error, signing out and redirecting...');
+
+//     try {
+//       await signOut({ redirect: false });
+//       redirect('/login');
+//     } catch (redirectError) {
+//       console.error('Error during sign out and redirect:', redirectError);
+//     }
+//   }
+//   return Promise.reject(error);
+// })
+
+
+axiosInstance.interceptors.response.use(async (response) => {
+  return response;
+}, async function (error) {
+  // 首先检查 error.response 是否存在
+  if (error.response) {
+    const { status } = error.response;
+    if (status === 401) {
+      console.log('Caught 401 error, signing out and redirecting...');
+      try {
+        // Perform sign-out logic (assuming signOut is a function that handles sign-out)
+        await signOut();
+        // await signOut({ redirect: false });
+        redirect('/login');
+      } catch (redirectError) {
+        console.error('Error during sign out and redirect:', redirectError);
+      }
+
+
+    }
+  } else {
+    // 处理没有 response 的情况
+    console.error('Error without response:', error);
+  }
+  return Promise.reject(error);
+});
+
+
+
+//   const originalRequest = error.config
+//   if (error?.response?.status === 401 && !originalRequest._retry) {
+//     try {
+//       originalRequest._retry = true
+//       const result = await refreshAccessToken()
+//       authAxios.accessToken = result?.accessToken
+//       return authAxios(originalRequest)
+//     } catch (err) {
+//       if (err?.response && err?.response?.data) {
+//         return Promise.reject(err?.response?.data)
+//       }
+//       return Promise.reject(err)
+//     }
+//   }
+//   return Promise.reject(error)
+// })
+
+
 export default axiosInstance;

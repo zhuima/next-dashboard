@@ -85,35 +85,35 @@ export default function TasksTable({ tasks, page, mutate }) {
                   key={task.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg hover:bg-gray-100"
                 >
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                  <td className="whitespace-normal py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
                       <p>
-                        <Link href={`/dashboard/tasks/${task.id}/history`}>
+                        <Link href={`/dashboard/tasks/${task.id}/history`} prefetch>
                           {task.id}
                         </Link>
                       </p>
                     </div>
                   </td>
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                  <td className="whitespace-normal py-3 pl-6 pr-3">
                     <p>{task.spec}</p>
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">{task.type}</td>
-                  <td className="whitespace-nowrap px-3 py-3">
+                  <td className="whitespace-normal px-3 py-3">{task.type}</td>
+                  <td className="whitespace-normal px-3 py-3">
                     {task.command}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
+                  <td className="whitespace-normal px-3 py-3">
                     {task.description}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
+                  <td className="whitespace-normal px-3 py-3">
                     <TaskStatus status={task.status} />
                   </td>
-                  {/* <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                  {/* <td className="whitespace-normal py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateTask id={task.id} page={page} />
                       <DeleteTask id={task.id} mutate={mutate} />
                     </div>
                   </td> */}
-                  <td className="whitespace-nowrap p-6">
+                  <td className="whitespace-normal p-6">
                     <Menu as="div" className="relative inline-block text-left">
                       {({ open }) => (
                         <>
@@ -126,9 +126,8 @@ export default function TasksTable({ tasks, page, mutate }) {
                             </Menu.Button>
                           </div>
                           <Menu.Items
-                            className={`absolute right-0  mt-2  z-50 origin-top-right bg-white rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 w-40 ${
-                              open ? "top-full" : "bottom-full"
-                            }`}
+                            className={`absolute right-0  mt-2  z-50 origin-top-right bg-white rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 w-40 ${open ? "top-full" : "bottom-full"
+                              }`}
                           >
                             <div className="py-1">
                               <Menu.Item as="div">
@@ -136,11 +135,10 @@ export default function TasksTable({ tasks, page, mutate }) {
                                   <UpdateTask
                                     id={task.id}
                                     page={page}
-                                    className={`${
-                                      active
-                                        ? "bg-gray-100 text-gray-900"
-                                        : "text-gray-700"
-                                    } w-full flex items-center space-x-2 hover:bg-gray-200 active:bg-gray-300 py-2 px-2 rounded-md text-gray-500`}
+                                    className={`${active
+                                      ? "bg-gray-100 text-gray-900"
+                                      : "text-gray-700"
+                                      } w-full flex items-center space-x-2 hover:bg-gray-200 active:bg-gray-300 py-2 px-2 rounded-md text-gray-500`}
                                   />
                                 )}
                               </Menu.Item>
@@ -149,11 +147,10 @@ export default function TasksTable({ tasks, page, mutate }) {
                                   <DeleteTask
                                     id={task.id}
                                     mutate={mutate}
-                                    className={`${
-                                      active
-                                        ? "bg-gray-100 text-gray-900"
-                                        : "text-gray-700"
-                                    } w-full flex items-center space-x-2 hover:bg-gray-200 active:bg-gray-300 py-2 px-2 rounded-lg text-gray-500`}
+                                    className={`${active
+                                      ? "bg-gray-100 text-gray-900"
+                                      : "text-gray-700"
+                                      } w-full flex items-center space-x-2 hover:bg-gray-200 active:bg-gray-300 py-2 px-2 rounded-lg text-gray-500`}
                                   />
                                 )}
                               </Menu.Item>

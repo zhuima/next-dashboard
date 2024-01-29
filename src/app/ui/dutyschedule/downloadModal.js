@@ -11,7 +11,7 @@
 // DownloadModal.js
 import React, { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import PDFDownloadLinkWrapper from "@/app/ui/dutyschedule/pDFDownloadLinkWrapper";
+import PDFDownloadLinkWrapper from "./PDFDownloadLinkWrapper";
 
 const DownloadModal = ({
   show,

@@ -39,46 +39,44 @@ export default function LatestProjects() {
       <div className="flex grow flex-col justify-between rounded-xl bg-gray-50 p-4 ">
         {/* NOTE: comment in this code when you get to this point in the course */}
 
-        <div className="bg-white px-6">
-          {projects.map((project, i) => {
-            return (
-              <div
-                key={project.id}
-                className={clsx(
-                  "flex flex-row items-center justify-start py-4 gap-x-6 hover:bg-gray-100",
-                  {
-                    "border-t": i !== 0,
-                  }
-                )}
-              >
-                <div className="flex flex-1 items-center">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold md:text-base">
-                      {project.project_name}
-                    </p>
-                    <p className="hidden text-sm text-gray-500 sm:block">
-                      {project.status}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <p
-                    className={`${lusitana.className} truncate text-sm font-medium md:text-base`}
-                  >
-                    {project.created_at}
+        {projects.map((project, i) => {
+          return (
+            <div
+              key={project.id}
+              className={clsx(
+                "flex flex-row items-center justify-start py-4 gap-x-6 hover:bg-gray-100",
+                {
+                  "border-t": i !== 0,
+                }
+              )}
+            >
+              <div className="flex flex-1 items-center">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold md:text-base">
+                    {project.project_name}
                   </p>
-                </div>
-                <div className="flex-1">
-                  <p
-                    className={`${lusitana.className} truncate text-sm font-medium md:text-base`}
-                  >
-                    {project.port}
+                  <p className="hidden text-sm text-gray-500 sm:block">
+                    {project.status}
                   </p>
                 </div>
               </div>
-            );
-          })}
-        </div>
+              <div className="flex-1 flex-shrink-0 w-20">
+                <p
+                  className={`${lusitana.className} truncate text-sm font-medium md:text-base`}
+                >
+                  {project.created_at}
+                </p>
+              </div>
+              <div className="flex-shrink-0 w-20">
+                <p
+                  className={`${lusitana.className} truncate text-sm font-medium md:text-base `}
+                >
+                  {project.port}
+                </p>
+              </div>
+            </div>
+          );
+        })}
         <div className="flex items-center pb-2 pt-6">
           <AiOutlineSync className="h-5 w-5 text-gray-500" />
           <h3 className="ml-2 text-sm text-gray-500 ">Updated just now</h3>

@@ -11,8 +11,10 @@
 import useSWR from "swr";
 import { fetcher } from "@/app/lib/fetcher";
 
+
+// http://127.0.0.1:9000/api/project/name/scrm-service
 export function useProjectWithName(pname) {
-  const { data, isLoading, error } = useSWR(`/api/project/${pname}`, fetcher);
+  const { data, isLoading, error } = useSWR(`/api/project/name/${pname}`, fetcher);
 
   return {
     project: data,

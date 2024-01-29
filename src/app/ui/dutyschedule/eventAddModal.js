@@ -10,12 +10,9 @@ import {
   AiOutlineClose,
 } from "react-icons/ai";
 
-// 定义表单的验证架构
-const formSchema = z.object({
-  eventName: z.string().min(1, "事件名称是必填项"),
-  eventUser: z.string().min(1, "用户是必填项"),
-  eventColor: z.string().min(1, "颜色是必填项"),
-});
+import { DutySchema } from "@/schema";
+import { useUserList } from "@/app/hooks/useUserList";
+import { ColorOptions } from "@/app/lib/utils";
 
 export default function EventAddModal({
   isOpen,
@@ -23,16 +20,33 @@ export default function EventAddModal({
   onAddEvent,
   selectedDate,
 }) {
+
+  const { users, isLoading: usersLoading } = useUserList()
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(DutySchema),
+    defaultValues: {
+      eventName: "",
+      eventUser: "",
+      eventColor: "",
+    },
   });
 
-  const handleEventAdd = (formData) => {
+  const onInvalid = (errors) => console.error(errors)
+
+  const onError = (errors, e) => {
+    // Handle errors, e.g., log them or display messages
+    console.log("------>    errors", errors);
+    console.log("------>    e", e);
+
+  };
+
+
+  const handleEventAdd = async (formData) => {
     // Here formData will have the structure { eventName, eventUser, eventColor }
     if (formData.eventName) {
       onAddEvent(
@@ -83,7 +97,7 @@ export default function EventAddModal({
             leaveTo="opacity-0 scale-95"
           >
             <form
-              onSubmit={handleSubmit(handleEventAdd)}
+              onSubmit={handleSubmit(handleEventAdd, onError, onInvalid)}
               className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
             >
               <div className="flex justify-between items-center mb-2">
@@ -113,15 +127,12 @@ export default function EventAddModal({
                   <option value="" disabled>
                     Select a user
                   </option>
-                  <option key="zhuima" value="zhuima">
-                    zhuima
-                  </option>
-                  <option key="tony" value="tony">
-                    tony
-                  </option>
-                  <option key="nick" value="nick">
-                    nick
-                  </option>
+
+                  {users.map((user) => (
+                    <option key={user.username} value={user.id.toString()}>
+                      {user.username}
+                    </option>
+                  ))}
                 </select>
                 {errors.eventUser && (
                   <p className="text-red-500">{errors.eventUser.message}</p>
@@ -158,15 +169,13 @@ export default function EventAddModal({
                   <option value="" disabled>
                     Select a color
                   </option>
-                  <option key="red" value="red">
-                    red
-                  </option>
-                  <option key="blue" value="blue">
-                    blue
-                  </option>
-                  <option key="green" value="green">
-                    green
-                  </option>
+
+                  {ColorOptions.map((color) => (
+                    <option key={color.label} value={color.value}>
+                      {color.label}
+                    </option>
+                  ))}
+
                 </select>
                 {errors.eventColor && (
                   <p className="text-red-500">{errors.eventColor.message}</p>

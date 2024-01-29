@@ -123,3 +123,25 @@ table.fc-col-header {
 .project-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #718096; /* 滑块hover颜色 */
 }
+
+
+
+/* d3.js  */
+.node__root > circle {
+  fill: red;
+}
+
+.node__branch > circle {
+  fill: yellow;
+}
+
+.node__leaf > circle {
+  fill: green;
+  /* Let's also make the radius of leaf nodes larger */
+  r: 40;
+}
+
+.btn {
+  padding: 0.5em;
+  border: none;
+}

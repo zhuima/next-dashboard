@@ -1,0 +1,128 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import {
+  AiOutlineDown,
+  AiOutlineUp,
+  AiFillHome,
+  AiOutlineSchedule,
+  AiOutlineFieldTime,
+  AiOutlineTable,
+} from "react-icons/ai";
+
+import { LiaStampSolid } from "react-icons/lia";
+
+import CMDBLogo from "@/app/ui/cmdb-logo";
+
+import { Sidebar, Menu, MenuItem, SubMenu, useProSidebar } from "react-pro-sidebar";
+
+
+
+const SubMenu = ({ items, isActive }) => {
+
+
+
+  return (
+    <div className="flex flex-col pl-4">
+      {items.map((item, index) => (
+        <Link
+          href={item.href}
+          key={index}
+          className={`flex items-center px-4 py-2 text-sm hover:bg-blue-700 ${isActive(item.href) ? "bg-blue-700 text-white" : "text-gray-200"
+            }`}
+        >
+          {item.Icon && <item.Icon className="mr-2" />} {/* Display icon */}
+          {item.title}
+        </Link>
+      ))}
+    </div>
+  );
+};
+
+// Assuming NavbarItem is defined as follows
+const NavbarItem = ({ title, href, subItems, isOpen, onClick, Icon }) => {
+  const pathname = usePathname();
+  const isActive = (path) => pathname === path;
+
+  console.log("active ----> ", pathname, href);
+  const itemClass = isActive(href)
+    ? "bg-blue-700 text-white" // Active item class
+    : "text-gray-300 hover:bg-blue-600 hover:text-white"; // Inactive item class
+
+  // If there are subItems, render a button that can toggle the submenu
+  // If there are no subItems, render a link for navigation
+  return subItems && subItems.length > 0 ? (
+    <div className="relative">
+      <button
+        onClick={onClick}
+        className={`flex items-center justify-between w-full px-4 py-2 text-sm text-white font-semibold rounded  hover:bg-blue-700  ${itemClass}`}
+      >
+        <div className="flex items-center">
+          {Icon && <Icon className="mr-2" />} {/* Icon for the navbar item */}
+          {title}
+        </div>
+        {subItems && subItems.length > 0 && (
+          <span>{isOpen ? <AiOutlineUp /> : <AiOutlineDown />}</span>
+        )}
+      </button>
+      {isOpen && <SubMenu items={subItems} isActive={isActive} />}
+    </div>
+  ) : (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={`flex items-center px-4 py-2 text-sm text-white font-semibold rounded  hover:bg-blue-700 ${itemClass}`}
+    >
+      {Icon && <Icon className="mr-2 flex-shrink-0" />}{" "}
+      {/* Prevent icon from shrinking */}
+      <span className="flex-grow">{title}</span>{" "}
+    </Link>
+  );
+};
+
+const Navbar = ({ isMenuOpen }) => {
+  const [openItem, setOpenItem] = useState(null);
+  const [openMenu, setOpenMenu] = useState(null);
+
+
+  const { collapseSidebar, toggleSidebar, collapsed, toggled, broken, rtl } =
+    useProSidebar();
+
+
+
+  return (
+    <div style={{ display: "flex", height: "100vh" }}>
+      <Sidebar className="app">
+        <Menu>
+          <MenuItem className="menu1">
+            <h2>QUICKPAY</h2>
+          </MenuItem>
+          <MenuItem> Dashboard </MenuItem>
+          <MenuItem> Invoices </MenuItem>
+          <SubMenu label="Charts">
+            <MenuItem> Timeline Chart </MenuItem>
+            <MenuItem> Bubble Chart </MenuItem>
+          </SubMenu>
+          <SubMenu label="Wallets">
+            <MenuItem>Current Wallet</MenuItem>
+            <MenuItem>Savings Wallet</MenuItem>
+          </SubMenu>
+          <MenuItem> Transactions </MenuItem>
+          <SubMenu label="Settings">
+            <MenuItem> Account </MenuItem>
+            <MenuItem> Privacy </MenuItem>
+            <MenuItem> Notifications </MenuItem>
+          </SubMenu>
+          <MenuItem> Logout </MenuItem>
+        </Menu>
+      </Sidebar>
+      <h1>WELCOME TO QUICKPAY</h1>
+    </div>
+
+  );
+};
+
+export default Navbar;

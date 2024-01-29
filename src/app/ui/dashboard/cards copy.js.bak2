@@ -1,0 +1,110 @@
+/*
+ * @Author: zhuima zhuima314@gmail.com
+ * @Date: 2023-12-04 11:00:03
+ * @LastEditors: zhuima zhuima314@gmail.com
+ * @LastEditTime: 2023-12-04 11:05:14
+ * @FilePath: /my-next-dashboard/src/app/ui/dashboard/cards.js
+ * @Description:
+ *
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
+ */
+// import {
+//   BanknotesIcon,
+//   ClockIcon,
+//   UserGroupIcon,
+//   InboxIcon,
+// } from "@heroicons/react/24/outline";
+"use client"
+import { useEffect, useState } from "react";
+import { AiFillHome, AiOutlineUser } from "react-icons/ai";
+import { lusitana } from "@/app/ui/fonts";
+import { FaServer } from "react-icons/fa";
+import { TbTournament } from "react-icons/tb";
+import { GrProjects } from "react-icons/gr";
+
+
+const iconMap = {
+  Projects: GrProjects,
+  Users: AiOutlineUser,
+  Domains: TbTournament,
+  Hosts: FaServer,
+};
+
+export default async function CardWrapper() {
+  const [dashboardEvent, setDashboardEvent] = useState({});
+
+  useEffect(() => {
+    const connectWebSocket = () => {
+      const webSocketURL = process.env.NEXT_PUBLIC_WEB_SOCKET_URL;
+
+      console.log("WebSocket URL:", webSocketURL);
+
+
+      if (!webSocketURL) {
+        throw new Error("Web Socket URL无效。");
+      }
+
+
+      const ws = new WebSocket(`${webSocketURL}`);
+      // const ws = new WebSocket(`${webSocketURL}?token=${token}`);
+      ws.onmessage = (event) => {
+        console.log("connet ws 1")
+
+        const e = JSON.parse(event.data);
+        setDashboardEvent(e);
+      };
+      // 勝手に接続切れたときの再接続
+      ws.onclose = () => {
+        setTimeout(connectWebSocket, 900000);
+        console.log("disconnet ws 2")
+      };
+
+      return ws;
+    };
+
+    const ws = connectWebSocket();
+    return () => {
+      ws.close();
+      console.log("disconnet ws 3")
+
+    };
+    // }, [token]);
+  }, []);
+
+  if (!dashboardEvent) {
+    return null;
+  }
+
+  return (
+    <>
+      {/* NOTE: comment in this code when you get to this point in the course */}
+
+      <Card title="Projects" value={dashboardEvent?.project_count} type="Projects" />
+      <Card title="Users" value={dashboardEvent?.user_count} type="Users" />
+      <Card title="Domains" value={dashboardEvent?.domain_count} type="Domains" />
+      <Card
+        title="Hosts"
+        value={dashboardEvent?.host_count}
+        type="Hosts" />
+    </>
+  );
+}
+
+export function Card({ title, value, type }) {
+  const Icon = iconMap[type];
+
+  return (
+    <div className="rounded-xl bg-gray-50 p-2 shadow-sm">
+      <div className="flex p-4">
+        {Icon ? <Icon className="h-5 w-5 text-gray-700" /> : null}
+        <h3 className="ml-2 text-sm font-medium">{title}</h3>
+      </div>
+      <p
+        className={`${lusitana.className}
+          truncate rounded-xl bg-white px-4 py-8 text-center text-2xl`}
+      >
+        {value}
+      </p>
+    </div>
+  );
+}

@@ -33,7 +33,7 @@ export default async function Page() {
   //   redirect("/login");
   // }
   return (
-    <main>
+    <>
       <Breadcrumbs
         breadcrumbs={[{ label: "首页", Icon: AiFillHome, href: "/dashboard" }]}
       />
@@ -58,6 +58,7 @@ export default async function Page() {
           value={numberOfCustomers}
           type="customers"
         /> */}
+
         <Suspense fallback={<CardsSkeleton />}>
           <CardWrapper />
         </Suspense>
@@ -68,6 +69,6 @@ export default async function Page() {
           <LatestProjects />
         </Suspense>
       </div>
-    </main>
+    </>
   );
 }

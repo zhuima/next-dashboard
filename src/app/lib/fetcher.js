@@ -12,3 +12,8 @@
 import axiosInstance from "./axiosInstance";
 
 export const fetcher = (url) => axiosInstance.get(url).then((res) => res.data);
+// const fetcher = (url) =>
+//     Promise.all([
+//         fetch(url),
+//         new Promise((res) => setTimeout(res, 600))
+//     ]).then(([res]) => res.json());

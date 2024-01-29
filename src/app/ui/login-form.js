@@ -9,11 +9,13 @@
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
  */
 "use client";
+import { useState } from "react"
 import {
   AiOutlineKey,
   AiOutlineArrowRight,
   AiOutlineUser,
 } from "react-icons/ai";
+import { clsx } from "clsx";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +26,8 @@ import { LoginZodSchema } from "@/schema";
 import { signIn } from "next-auth/react";
 
 export default function LoginForm() {
+  // 添加一个状态来保存错误消息
+  const [loginError, setLoginError] = useState(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const url = searchParams.get("callbackUrl") || "/dashboard";
@@ -31,12 +35,25 @@ export default function LoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    watch,
+    formState: { errors, isSubmitting },
+    setError,
   } = useForm({ resolver: zodResolver(LoginZodSchema) });
 
+
+  // 监听所有字段的变化
+  watch((data, { name, type }) => {
+    if (loginError) {
+      setLoginError(null)
+    }
+  });
+
+
   const onSubmit = async (data) => {
-    console.log("log", data);
+    // console.log("log", data);
     // const result = await authenticate(data);
+    // 清除之前的错误信息
+    setLoginError(null);
     const result = await signIn("credentials", {
       ...data,
       callbackUrl: url,
@@ -48,13 +65,17 @@ export default function LoginForm() {
     if (result.error) {
       // 显示错误信息
       console.error(result.error);
-      toast.error(result.error.toString());
+      // toast.error(result.error.toString());
       // throw new Error(result.error);
+      // 设置错误消息
+      setLoginError(result.error);
     }
 
     if (!result?.error) {
       // router.push("/dashboard");
-      router.replace(url);
+      // 清除错误消息
+      setLoginError(null);
+      router.replace(url, { shallow: true });
       // router.refresh();
     }
   };
@@ -124,7 +145,7 @@ export default function LoginForm() {
             ) : null}
           </div>
         </div>
-        <LoginButton />
+        <LoginButton isSubmitting={isSubmitting} />
         <div className="flex h-8 items-end space-x-1">
           {/* Add form errors here */}
           {/* {code === "CredentialSignin" && (
@@ -135,18 +156,43 @@ export default function LoginForm() {
               </p>
             </>
           )} */}
+
+          {/* 显示错误消息 */}
+          {loginError && (
+            <>
+              <AiOutlineUser className="h-5 w-5 text-red-500" />
+              <p aria-live="polite" className="text-sm text-red-500">
+                Invalid credentials
+              </p>
+            </>
+          )}
         </div>
       </div>
     </form>
   );
 }
 
-function LoginButton() {
+function LoginButton({ isSubmitting }) {
   // const { "pending" } = useFormStatus();
 
   return (
-    <Button className="mt-4 w-full" aria-disabled="false">
-      Log in <AiOutlineArrowRight className="ml-auto h-5 w-5 text-gray-50" />
-    </Button>
+    <Button disabled={isSubmitting} className="mt-4 w-full" aria-disabled="false">
+      {isSubmitting ? (
+        <>
+          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Logging in...
+        </>) : (
+        <>
+          Log in <AiOutlineArrowRight className="ml-auto h-5 w-5 text-gray-50" />
+        </>
+
+      )}
+    </Button >
+
+
+
   );
 }

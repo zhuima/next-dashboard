@@ -20,15 +20,15 @@ export default function ApprovalStatus({ status, label }) {
           "inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-black-700 ring-1 ring-inset ring-red-600/10":
             status === 1,
           "inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10":
-            status === 3,
+            status === 4,
           "inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20":
-            status === 2,
+            status === 3,
         }
       )}
     >
       {status === 1 ? <>{label}</> : null}
       {status === 3 ? <>{label}</> : null}
-      {status === 2 ? <>{label}</> : null}
+      {status === 4 ? <>{label}</> : null}
     </span>
   );
 }

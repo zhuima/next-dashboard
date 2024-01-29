@@ -47,18 +47,18 @@ export default function Page() {
           { label: "首页", Icon: AiFillHome, href: "/dashboard" },
 
           {
-            label: "工单待办",
+            label: "项目清单",
             href: "/dashboard/workflow",
             active: true,
           },
         ]}
       />
       <div className="w-full">
-        <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-          <Search placeholder="Search workflow..." />
+        <div className="mt-3 flex items-center justify-between gap-2 md:mt-8">
+          <Search placeholder="Press (CTRL + /) to search... " />
           <CreateWorkflow />
         </div>
-        {isLoading ? (
+        {/* {isLoading ? (
           <TasksTableSkeleton />
         ) : (
           <>
@@ -68,7 +68,7 @@ export default function Page() {
               url={url}
               mutate={mutate}
             />
-            <div className="mt-5 flex w-full items-center justify-center gap-x-6">
+            <div className="mt-3 flex w-full items-center justify-center gap-x-6">
               <span className="text-sm text-gray-700 ">
                 Total <span className="font-semibold">{total}</span> items
               </span>
@@ -79,7 +79,26 @@ export default function Page() {
               />
             </div>
           </>
-        )}
+        )} */}
+        <Suspense fallback={<TasksTableSkeleton />}>
+          <WorkflowTable
+            loading={isLoading}
+            projects={projects}
+            page={page}
+            // url={url}
+            mutate={mutate}
+          />
+          <div className="mt-3 flex w-full items-center justify-center gap-x-6">
+            <span className="text-sm text-gray-700 ">
+              Total <span className="font-semibold">{total}</span> items
+            </span>
+            <Pagination
+              total={total}
+              currentPage={page}
+              itemsPerPage={limit}
+            />
+          </div>
+        </Suspense>
       </div>
     </main>
   );

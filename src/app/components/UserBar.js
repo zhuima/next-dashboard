@@ -9,7 +9,6 @@
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
  */
 "use client";
-import { useTheme } from "next-themes";
 import { AiOutlineDown } from "react-icons/ai";
 import Image from "next/image";
 import Link from "next/link";
@@ -57,7 +56,7 @@ const UserBar = ({ toggleSidebar, isSidebarOpen }) => {
   // }
 
   return (
-    <div className="flex justify-between items-center  p-4  bg-gray-100">
+    <div className="flex justify-between items-center p-4 bg-gray-100 h-16">
       <button onClick={toggleSidebar} className="...">
         {isSidebarOpen ? <AiOutlineMenuFold /> : <AiOutlineMenuUnfold />}
       </button>
@@ -131,10 +130,11 @@ const UserBar = ({ toggleSidebar, isSidebarOpen }) => {
             <div className="px-1 py-1">
               <Menu.Item>
                 {({ active }) => (
-                  <button
-                    className={`${
-                      active ? "bg-violet-500 text-white" : "text-gray-900"
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                  <Link
+                    className={`${active ? "bg-violet-500 text-white" : "text-gray-900"
+                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                    href="/dashboard/profile" // Replace with your logout logic
+                    prefetch
                   >
                     {active ? (
                       <ArchiveActiveIcon
@@ -147,21 +147,16 @@ const UserBar = ({ toggleSidebar, isSidebarOpen }) => {
                         aria-hidden="true"
                       />
                     )}
-                    <Link
-                      href="/dashboard/profile" // Replace with your logout logic
-                    >
-                      Profile
-                    </Link>
-                  </button>
+                    Profile
+                  </Link>
                 )}
               </Menu.Item>
               <Menu.Item>
                 {({ active }) => (
                   <button
                     onClick={handleSignOut}
-                    className={`${
-                      active ? "bg-violet-500 text-white" : "text-gray-900"
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                    className={`${active ? "bg-violet-500 text-white" : "text-gray-900"
+                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   >
                     {active ? (
                       <MoveActiveIcon

@@ -14,43 +14,80 @@
 //   UserGroupIcon,
 //   InboxIcon,
 // } from "@heroicons/react/24/outline";
-
-import { AiFillHome } from "react-icons/ai";
+"use client"
+import React, { useEffect, useState, useRef, useMemo, useCallback, useReducer } from "react";
+import { AiFillHome, AiOutlineUser } from "react-icons/ai";
 import { lusitana } from "@/app/ui/fonts";
+import { FaServer } from "react-icons/fa";
+import { TbTournament } from "react-icons/tb";
+import { GrProjects } from "react-icons/gr";
+
 
 const iconMap = {
-  collected: AiFillHome,
-  customers: AiFillHome,
-  pending: AiFillHome,
-  invoices: AiFillHome,
+  Projects: GrProjects,
+  Users: AiOutlineUser,
+  Domains: TbTournament,
+  Hosts: FaServer,
 };
 
+const initialState = {
+  project_count: null,
+  user_count: null,
+  domain_count: null,
+  host_count: null,
+};
+
+function reducer(state, action) {
+  return { ...state, ...action };
+}
+
+
 export default async function CardWrapper() {
-  //   const {
-  //     numberOfCustomers,
-  //     numberOfInvoices,
-  //     totalPaidInvoices,
-  //     totalPendingInvoices,
-  //   } = await fetchCardData();
-  const numberOfCustomers = 1;
-  const numberOfInvoices = 5;
-  const totalPaidInvoices = 12;
-  const totalPendingInvoices = 16;
+
+  const [websocketData, dispatch] = useReducer(reducer, initialState);
+
+  const handleWebSocketMessage = useCallback((event) => {
+    const newData = JSON.parse(event.data);
+
+    // Compare with previous data before updating state
+    if (JSON.stringify(newData) !== JSON.stringify(websocketData)) {
+      dispatch(newData);
+    }
+  }, [websocketData]);
+
+  useEffect(() => {
+    const socket = new WebSocket(process.env.NEXT_PUBLIC_WEB_SOCKET_URL);
+
+    socket.onopen = function () {
+      console.log('ws Connected')
+      // socket.send('Hello, server!');
+
+    }
+
+    socket.onclose = function () {
+      console.log('ws closed')
+    }
+
+    socket.onmessage = handleWebSocketMessage;
+
+    return () => {
+      socket.close();
+    };
+  }, [handleWebSocketMessage]); // Re-run effect only if handleWebSocketMessage changes
+
 
   return (
     <>
       {/* NOTE: comment in this code when you get to this point in the course */}
-
-      <Card title="Collected" value={totalPaidInvoices} type="collected" />
-      <Card title="Pending" value={totalPendingInvoices} type="pending" />
-      <Card title="Total Invoices" value={numberOfInvoices} type="invoices" />
+      <Card title="Projects" value={websocketData?.project_count} type="Projects" />
+      <Card title="Users" value={websocketData?.user_count} type="Users" />
+      <Card title="Domains" value={websocketData?.domain_count} type="Domains" />
       <Card
-        title="Total Customers"
-        value={numberOfCustomers}
-        type="customers"
-      />
+        title="Hosts"
+        value={websocketData?.host_count}
+        type="Hosts" />
     </>
-  );
+  ) // Include websocketData as a dependency
 }
 
 export function Card({ title, value, type }) {

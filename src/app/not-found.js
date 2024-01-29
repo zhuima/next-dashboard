@@ -27,7 +27,7 @@ export default function NotFound() {
             Not Found{" "}
           </p>
 
-          <Link href="/">
+          <Link href="/" prefetch>
             <button className="px-4 py-2 mt-4 text-lg text-gray-600 transition-colors duration-300 transform border rounded-lg hover:bg-gray-100 focus:outline-none">
               Go Home
             </button>

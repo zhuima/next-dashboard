@@ -12,7 +12,10 @@ import useSWR from "swr";
 import { fetcher } from "@/app/lib/fetcher";
 
 export function useProject(id) {
-  const { data, isLoading, error } = useSWR(`/api/project/${id}`, fetcher);
+  // const { data, isLoading, error } = useSWR(`/api/project/${id}`, fetcher);
+  const { data, isLoading, error } = useSWR(!!id ? `/api/project/${id}` : null, fetcher);
+
+
 
   return {
     project: data,
